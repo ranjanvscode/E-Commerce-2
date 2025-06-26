@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: e-commerce-app
+    env: java
+    buildCommand: ./mvnw clean install
+    startCommand: java -jar target/EcomProject-0.0.1-SNAPSHOT.jar
+    plan: free
+    envVars:
+      - key: JAVA_VERSION
+        value: 17

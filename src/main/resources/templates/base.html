@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth" th:fragment="parent(content,title,script)"  xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title} ?:~{}">Altu faltu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            }
+                        },
+                        animation: {
+                            'bounce-in': 'bounceIn 0.6s ease-out',
+                            'fade-in': 'fadeIn 0.3s ease-out',
+                            'scale-in': 'scaleIn 0.4s ease-out',
+                            'checkmark': 'checkmark 0.6s ease-out 0.2s both'
+                        },
+                        keyframes: {
+                            bounceIn: {
+                                '0%': { transform: 'scale(0.3)', opacity: '0' },
+                                '50%': { transform: 'scale(1.05)' },
+                                '70%': { transform: 'scale(0.9)' },
+                                '100%': { transform: 'scale(1)', opacity: '1' }
+                            },
+                            fadeIn: {
+                                '0%': { opacity: '0' },
+                                '100%': { opacity: '1' }
+                            },
+                            scaleIn: {
+                                '0%': { transform: 'scale(0)', opacity: '0' },
+                                '100%': { transform: 'scale(1)', opacity: '1' }
+                            },
+                            checkmark: {
+                                '0%': { transform: 'scale(0) rotate(-35deg)', opacity: '0' },
+                                '100%': { transform: 'scale(1) rotate(-35deg)', opacity: '1' }
+                            }
+                        }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    
+    <div th:if="${admin} == null or !${admin}">
+        <div th:replace="~{navbar :: userNavbar}"></div>
+    </div>
+
+    <div th:replace="~{sidebar::menuSidebar}"></div>
+
+    <!-- sec:authorize="hasRole('ROLE_USER')"  -->
+
+
+    <div>
+        <section th:replace="${content}?:~{}">
+        </section>
+    </div>
+
+    <script th:inline="javascript">
+        const isAuthenticated = /*[[${#authorization.expression('isAuthenticated()')}]]*/ false;
+    </script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="/JS/darkmode.js"></script>
+<script src="/JS/sidebar.js"></script>
+<th:block th:replace="${script} ?: ~{}" />
+    
+</body>
+</html>

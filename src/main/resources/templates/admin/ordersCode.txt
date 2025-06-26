@@ -1,0 +1,5 @@
+line 694 
+                            <!-- <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPaymentStatusColor(order?.paymentStatus)} whitespace-nowrap">
+                                ${order?.paymentStatus.charAt(0).toUpperCase() + order?.paymentStatus.slice(1)}
+                            </span>  -->
+

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth" th:replace="~{base :: parent(~{::#content},~{::#title},~{::script})}"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title id="title">RMR - Your Ultimate Shopping Destination</title>
+</head>
+<body>
+    <div id="content">
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-primary-600 to-purple-600 text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-6xl font-bold mb-4">Welcome to RMR</h2>
+            <p class="text-xl md:text-2xl mb-8 opacity-90">Discover amazing food and beverages at unbeatable prices</p>
+            <button onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})" 
+                    class="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                Shop Now
+            </button>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="bg-white dark:bg-gray-800 py-6 border-b border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap items-center gap-4">
+                    <select id="categoryFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                        <option value="">All Categories</option>
+                        <option value="food&beverages">Food & Beverages</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="books">Books</option>
+                        <option value="toys">Toys</option>
+                    </select>
+                    
+                    <select id="priceFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                        <option value="">All Prices</option>
+                        <option value="0-50">$0 - $50</option>
+                        <option value="50-100">$50 - $100</option>
+                        <option value="100-500">$100 - $500</option>
+                        <option value="500+">$500+</option>
+                    </select>
+                </div>
+
+                
+                <!-- Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-lg mx-8">
+                    <div class="relative w-full">
+                        <input type="text" id="searchInput" placeholder="Search products..." 
+                               class="w-full px-4 py-2 pl-10 pr-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- Mobile Search -->
+                <div class="md:hidden mt-4">
+                    <div class="relative">
+                        <input type="text" id="mobileSearchInput" placeholder="Search products..." 
+                            class="w-full px-4 py-2 pl-10 pr-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <span class="text-sm text-gray-600 dark:text-gray-400">Sort by:</span>
+                    <select id="sortFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                        <option value="name">Name</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Rating</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Featured Products</h2>
+            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Products will be dynamically inserted here -->
+                 
+            </div>
+            
+            <!-- No Results Message -->
+            <div id="noResults" class="hidden text-center py-12">
+                <i class="fas fa-search text-6xl text-gray-400 mb-4"></i>
+                <h3 class="text-2xl font-semibold text-gray-600 dark:text-gray-400 mb-2">No products found</h3>
+                <p class="text-gray-500 dark:text-gray-500">Try adjusting your search or filter criteria</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-shopping-bag text-2xl text-primary-500"></i>
+                        <h3 class="text-xl font-bold">RMR</h3>
+                    </div>
+                    <p class="text-gray-400">Your ultimate shopping destination for quality products at great prices.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Shipping</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Categories</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Electronics</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Clothing</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Books</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Home & Garden</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-facebook text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-twitter text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-linkedin text-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 RMR. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Product Detail Modal -->
+    <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-6">
+                    <h3 id="modalTitle" class="text-2xl font-bold"></h3>
+                    <button id="closeModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <img id="modalImage" src="/images/rmr.png" alt="" class="w-full h-96 object-cover rounded-lg">
+                    </div>
+                    
+                    <div>
+                        <div class="flex items-center mb-4">
+                            <div id="modalRating" class="flex text-yellow-400 mr-2"></div>
+                            <span id="modalRatingText" class="text-gray-600 dark:text-gray-400"></span>
+                        </div>
+                        
+                        <p id="modalPrice" class="text-3xl font-bold text-primary-600 mb-4"></p>
+                        <p id="modalDescription" class="text-gray-600 dark:text-gray-400 mb-6"></p>
+                        
+                        <div class="flex items-center space-x-4 mb-6">
+                            <label class="text-sm font-medium">Quantity:</label>
+                            <div class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg">
+                                <button id="decreaseQty" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">-</button>
+                                <input id="modalQuantity" type="number" value="1" min="1" class="w-16 text-center border-0 bg-transparent">
+                                <button id="increaseQty" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">+</button>
+                            </div>
+                        </div>
+                        
+                        <button id="modalAddToCart" class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Login</h3>
+                    <button id="closeLoginModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="loginForm" th:action="@{/authenticate}" method="post">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">Email</label>
+                        <input type="email" name="email" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium mb-2">Password</label>
+                        <input type="password" name="password" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700">
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors mb-4">
+                        Login
+                    </button>
+                    
+                    <p class="text-center text-gray-600 dark:text-gray-400">
+                        Don't have an account? 
+                        <button type="button" id="showSignup" class="text-primary-600 hover:text-primary-700 font-medium">Sign up</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Sign Up</h3>
+                    <button id="closeSignupModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="signupForm" th:action="register" method="post" th:object="${userForm}">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">Full Name</label>
+                        <input type="text" th:field="*{name}" id="name" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">Email</label>
+                        <input type="email" th:field="*{email}" id="email" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium mb-2">Password</label>
+                        <input type="password" th:field="*{password}" id="password" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700">
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors mb-4">
+                        Sign Up
+                    </button>
+                    
+                    <p class="text-center text-gray-600 dark:text-gray-400">
+                        Already have an account? 
+                        <button type="button" id="showLogin" class="text-primary-600 hover:text-primary-700 font-medium">Login</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Checkout</h3>
+                    <button id="closeCheckoutModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="checkoutForm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <h4 class="font-semibold mb-4">Shipping Information</h4>
+                            <div class="space-y-4">
+                                <input type="text" name="addName" id="addName" placeholder="Full Name" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700">
+                                <input type="tel" name="addPhoneNo" id="addPhoneNo" 
+                                       pattern="[0-9]{10}" minlength="10" maxlength="10" required 
+                                       title="Please enter exactly 10 digits"
+                                       placeholder="Phone No." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700">
+                                <input type="text" name="addAddress" id="addAddress" placeholder="Address" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" name="addPostalCode" pattern="\d{6}" id="addPostalCode" onblur="" placeholder="Enter 6-digit PIN code" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700">
+                                    <input type="text" name="addCity" id="addCity" placeholder="City" readonly class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700">
+                                    <input type="text" name="addState" id="addState" placeholder="State" readonly class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-4">Choose Payment Method:</h4>
+                            <div class="space-y-4">
+                                <select name="paymentMethod" id="paymentMethod" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700" >
+                                    <option value="prepaid">Prepaid</option>
+                                    <option value="cod">COD</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-lg font-semibold">Total:</span>
+                            <span id="checkoutTotal" class="text-xl font-bold text-primary-600">$0.00</span>
+                        </div>
+                        <button id="rzp-button1" type="submit" class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors">
+                            Place Order
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 hidden items-center justify-center p-4 z-50">
+        <!-- Modal Content -->
+        <div id="modalContent" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-8 text-center transform transition-colors duration-300">
+            <!-- Success Checkmark -->
+            <div class="mb-6">
+                <div class="w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4 animate-scale-in">
+                    <div class="w-8 h-4 border-b-4 border-l-4 border-green-500 dark:border-green-400 transform rotate-45 animate-checkmark"></div>
+                </div>
+            </div>
+            
+            <!-- Thank You Message -->
+            <div class="animate-bounce-in">
+                <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Thank You!</h2>
+                <p class="text-gray-600 dark:text-gray-300 mb-2">Your order has been placed successfully.</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">You will receive a confirmation email shortly.</p>
+            </div>
+            
+            <!-- Order Details -->
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6 animate-fade-in">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm text-gray-600 dark:text-gray-400">Order #</span>
+                    <span class="text-sm font-semibold text-gray-800 dark:text-white" id="orderNumber">ORD-00000000</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600 dark:text-gray-400">Total</span>
+                    <span id="thanksTotal" class="text-lg font-bold text-green-600 dark:text-green-400">00.00</span>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+                <button 
+                    id="trackOrderBtn"
+                    class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
+                >
+                    Track Your Order
+                </button>
+                <button 
+                    id="closeModalBtn"
+                    class="w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
+                >
+                    Continue Shopping
+                </button>
+            </div>
+        </div>
+    </div>
+
+    </div>
+</body>
+<script th:src="@{/JS/sidebar.js}"></script>
+<script th:src="@{/JS/script.js}"></script>
+</html>
