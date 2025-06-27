@@ -3,8 +3,8 @@ package com.ecommerce.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecommerce.Forms.OrderItemRequest;
-import com.ecommerce.Forms.OrderRequest;
+import com.ecommerce.RequestForm.OrderItemRequest;
+import com.ecommerce.RequestForm.OrderRequest;
 import com.ecommerce.ServiceInterface.UserService;
 import com.ecommerce.model.Orders;
 import com.ecommerce.model.Payment;
@@ -18,12 +18,14 @@ import com.ecommerce.service.ProductService;
 
 import jakarta.validation.Valid;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +49,9 @@ public class OrderController {
 
     @Autowired
     PaymentService paymentService;
+
+    @Value("${app.shipping-fee}")
+    private int shippingFee;
 
     @PostMapping("/placeOrder")
     public ResponseEntity<String> placeOrder(@Valid @RequestBody OrderRequest request, Authentication authentication, BindingResult result) {
@@ -75,10 +80,10 @@ public class OrderController {
         shipping.setId(UUID.randomUUID().toString());
         shipping.setShippedDate(null);
         shipping.setShippingCarrier(null);
-        shipping.setShippingCost(49);
+        shipping.setShippingCost(BigDecimal.valueOf(shippingFee));
         shipping.setTrackingNumber(null);
         shipping.setShippingStatus(null);
-        shipping.setTax(0);
+        shipping.setTax(BigDecimal.valueOf(0));
 
 
         // 3. Create Order
@@ -91,7 +96,7 @@ public class OrderController {
         orders.setShipping(shipping); 
         orders.setPayment(payment);
 
-        float subTotal = 0;
+        BigDecimal subTotal = BigDecimal.ZERO;
         int itemCount = 0;
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -102,10 +107,11 @@ public class OrderController {
             item.setId(UUID.randomUUID().toString());
             item.setProduct(product);
             item.setQuantity(itemReq.getQuantity());
-            item.setPrice(product.getPrice());
+            item.setPrice(itemReq.getPrice());
             item.setOrders(orders); // set parent orders
 
-            subTotal += item.getPrice();
+            // subTotal += item.getPrice();
+             subTotal = subTotal.add(item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
             itemCount += item.getQuantity();
 
             orderItems.add(item);
@@ -113,7 +119,8 @@ public class OrderController {
 
         orders.setOrderItems(orderItems);
         orders.setSubTotal(subTotal);
-        orders.setTotalAmount(subTotal + shipping.getShippingCost() + shipping.getTax());
+        // orders.setTotalAmount(subTotal + shipping.getShippingCost() + shipping.getTax());
+        orders.setTotalAmount(subTotal.add(shipping.getShippingCost()).add(shipping.getTax()));
         orders.setItemCount(itemCount);
 
         // Save orders (cascades to Address and OrderItems)

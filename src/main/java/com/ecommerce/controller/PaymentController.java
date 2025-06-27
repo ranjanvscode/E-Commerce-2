@@ -1,13 +1,16 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.ServiceInterface.UserService;
+import com.ecommerce.model.CartItem;
 import com.ecommerce.model.Payment;
+import com.ecommerce.model.Product;
 import com.ecommerce.model.User;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import com.razorpay.Utils;
 import com.ecommerce.service.CartService;
+import com.ecommerce.service.DiscountService;
 import com.ecommerce.service.PaymentService;
 
 import org.json.JSONObject;
@@ -18,10 +21,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,6 +39,9 @@ public class PaymentController {
     @Value("${razorpay.api_secret}")
     private String RAZORPAY_KEY_SECRET;
 
+    @Value("${app.shipping-fee}")
+    private int shippingFee;
+
     @Autowired
     PaymentService paymentService;
 
@@ -43,21 +51,32 @@ public class PaymentController {
     @Autowired
     CartService cartService;
 
+    @Autowired
+    DiscountService discountService;
+
 
     @PostMapping("/createOrder")
-    public Map<String, Object> createOrder(@RequestParam("amount") int amount, @RequestParam("receipt") String receipt, Authentication authentication) {
+    public Map<String, Object> createOrder(@RequestParam("amount") BigDecimal amount, @RequestParam("receipt") String receipt, Authentication authentication) {
 
         Map<String, Object> response = new HashMap<>();
 
         String userEmail = authentication.getName();
         User user = userService.getUserByEmail(userEmail);
 
-        Float totalAmountFromDBCart = cartService.getTotalCartPrice(user);
-        int totalAmountFromUICart = amount;
+        List<CartItem> cartItems = cartService.getAllCartItemsByUser(user);
 
-        if (totalAmountFromDBCart.intValue() != totalAmountFromUICart) {
-            System.out.println("DB Amount: "+totalAmountFromDBCart);
-            System.out.println("UI Amount: "+totalAmountFromUICart);
+        BigDecimal totalFinalPrice = cartItems.stream()
+            .map(item -> {Product product = item.getProduct();
+                        BigDecimal finalPrice = discountService.getFinalPrice(product);
+                        return finalPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
+                        }).reduce(BigDecimal.ZERO, BigDecimal::add).add(BigDecimal.valueOf(shippingFee));//Shipping fee 
+
+
+        
+
+        if (totalFinalPrice.compareTo(amount)!=0) {
+            System.out.println("DB Amount: "+totalFinalPrice);
+            System.out.println("UI Amount: "+amount);
 
             response.put("error", "Amount is not equal");
         }else{
@@ -66,7 +85,7 @@ public class PaymentController {
             RazorpayClient razorpay = new RazorpayClient(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET);
 
             JSONObject orderRequest = new JSONObject();
-            orderRequest.put("amount", amount * 100); // convert ₹ to paise
+            orderRequest.put("amount", amount.multiply(BigDecimal.valueOf(100))); // convert ₹ to paise
             orderRequest.put("currency", "INR");
             orderRequest.put("receipt", receipt);
 

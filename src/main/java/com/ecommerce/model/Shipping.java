@@ -1,5 +1,6 @@
 package com.ecommerce.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -51,7 +52,7 @@ public class Shipping {
     private String shippingStatus; 
     private String trackingNumber;
     private String shippingCarrier; 
-    private float shippingCost;
-    private float tax;
+    private BigDecimal shippingCost;
+    private BigDecimal tax;
 
 }

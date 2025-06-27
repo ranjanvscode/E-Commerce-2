@@ -1,12 +1,13 @@
 package com.ecommerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.ecommerce.Forms.UserRequest;
+import com.ecommerce.RequestForm.UserRequest;
 import com.ecommerce.service.ProductService;
 
 @Controller
@@ -14,6 +15,9 @@ public class RootController {
 
     @Autowired
     ProductService productService;
+
+    @Value("${razorpay.api_key}")
+    private String RAZORPAY_KEY_ID;
 
     @GetMapping("/")
     public String general() {
@@ -24,6 +28,7 @@ public class RootController {
     public String home(Model m) {
         UserRequest userFrom = new UserRequest();
         m.addAttribute("userForm", userFrom);
+        m.addAttribute("RAZORPAY_KEY_ID", RAZORPAY_KEY_ID);
         return "home";
     }
 
@@ -49,11 +54,6 @@ public class RootController {
 
         model.addAttribute("admin", true);
         return "admin/adminpannel";
-    }
-
-    @GetMapping("/sidebar")
-    public String sidebar() {
-        return "sidebar";
     }
 
     @GetMapping("/access-denied")

@@ -1,5 +1,7 @@
 package com.ecommerce.model;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -30,6 +32,6 @@ public class OrderItem {
     private Product product;
 
     private int quantity;
-    private float price;
+    private BigDecimal price;
 
 }

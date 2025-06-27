@@ -6,9 +6,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.ecommerce.Forms.UserRequest;
 import com.ecommerce.Helper.Message;
 import com.ecommerce.Helper.MessageType;
+import com.ecommerce.RequestForm.UserRequest;
 import com.ecommerce.model.User;
 import com.ecommerce.service.UserServiceImpl;
 

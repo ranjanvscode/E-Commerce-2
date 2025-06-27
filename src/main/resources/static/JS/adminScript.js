@@ -56,7 +56,7 @@
             
             grid.innerHTML = products.map(product => `
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow animate-fade-in">
-                    <img src="${product.imageId}" alt="${product.name}" class="w-full h-48 object-cover">
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
                     <div class="p-4">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate">${product.name}</h3>
@@ -122,9 +122,11 @@
                 // Append form fields
                 formData.append('name', document.getElementById('name').value);
                 formData.append('price', document.getElementById('price').value);
+                formData.append('discount', document.getElementById('discount').value);
                 formData.append('category', document.getElementById('category').value);
                 formData.append('description', document.getElementById('description').value);
                 formData.append('rating', document.getElementById('rating').value);
+                formData.append('inStock', document.getElementById('inStock').value);
 
                 // Append file
                 const imageFile = document.getElementById('image').files[0];
@@ -137,7 +139,7 @@
                     // const index = products.findIndex(p => String(p.id) === String(editingProductId));
                     // products[index] = { ...products[index], ...formData };
 
-                    fetch(`/products/updateProduct/${editingProductId}`, {
+                    fetch(`/products/updateProduct/${editingProductId}`, { 
                         method: 'POST',
                         body: formData 
                     })
@@ -255,6 +257,7 @@
                 .then(response => response.json())
                 .then(productList => {
                 products = [...productList];
+                console.log("Product",products);
                 renderProducts();
             }).catch(error => console.error("Error fetching products:", error));
             setupEventListeners();

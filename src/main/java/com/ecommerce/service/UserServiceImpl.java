@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
         if(userExist==null){
             user.setId(userId);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            if(user.getEmail()=="ranjan@gmail.com"){
+            if(user.getEmail().equals("ranjan@gmail.com")){
 
                 user.setRoleList(List.of(AppConstant.ROLE_USER,AppConstant.ROLE_ADMIN));
             }else{

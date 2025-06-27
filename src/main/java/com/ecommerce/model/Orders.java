@@ -1,5 +1,6 @@
 package com.ecommerce.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -47,11 +48,11 @@ public class Orders {
     private Payment payment;
 
     private LocalDateTime orderDate;
-    private float totalAmount;
+    private BigDecimal totalAmount;
     private int itemCount;
     private String paymentMethod;
     private String paymentStatus;
-    private float subTotal;
+    private BigDecimal subTotal;
 }
 
 

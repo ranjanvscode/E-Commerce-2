@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
-import com.ecommerce.Forms.CartItemRequest;
+import com.ecommerce.RequestForm.CartItemRequest;
 import com.ecommerce.ServiceInterface.UserService;
 import com.ecommerce.model.CartItem;
 import com.ecommerce.model.Product;

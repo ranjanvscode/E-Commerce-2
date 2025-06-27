@@ -1,5 +1,6 @@
 package com.ecommerce.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,9 @@ public class CartService {
         cartRepository.deleteAllCartItem(user);
     }
 
-    public Float getTotalCartPrice(User user){
+    // public BigDecimal getTotalCartPrice(User user){
 
-        return cartRepository.getTotalCartAmountByUserId(user);
-    }
+        // return cartRepository.getTotalCartAmountByUserId(user);
+    // }
 
 }

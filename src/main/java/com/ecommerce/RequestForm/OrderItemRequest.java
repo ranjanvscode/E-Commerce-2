@@ -1,4 +1,6 @@
-package com.ecommerce.Forms;
+package com.ecommerce.RequestForm;
+
+import java.math.BigDecimal;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -13,5 +15,5 @@ public class OrderItemRequest {
     private int quantity;
 
     @Min(value = 0, message = "Price must be non-negative")
-    private float price;
+    private BigDecimal price;
 }

@@ -1,6 +1,6 @@
-package com.ecommerce.Forms;
+package com.ecommerce.ResponseForm;
 
-import org.springframework.web.multipart.MultipartFile;
+import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,12 +13,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ProductRequest {
+public class ProductResponse {
 
+    private String id;
     private String name;
-    private float price;
+    private BigDecimal price;
+    private BigDecimal discountPrice;
+    private BigDecimal discount;
+    private String image;
+    private boolean inStock;
     private String category;
     private Float rating;
-    private MultipartFile image;
     private String description;
 }

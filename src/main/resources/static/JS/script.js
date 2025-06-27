@@ -1,3 +1,4 @@
+
 // Global variables
 let cart = [];
 let filteredProducts = [];
@@ -6,6 +7,7 @@ let currentProduct = null;
 let receiptId = null;
 let paymentMethod = null;
 let totalAmount = null;
+let shippingFee = 0;
 
 // DOM elements
 const productGrid = document.getElementById("productGrid");
@@ -42,12 +44,27 @@ function renderProducts(productsToRender = filteredProducts) {
       (product) => `
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                     <div class="relative">
-                        <img src="${product.imageId}" alt="${
-        product.name
-      }" class="w-full h-64 object-cover cursor-pointer" onclick="openProductModal('${
-        product.id
-      }')">
-                        <div class="absolute top-4 right-4">
+                        <img src="${product.image}" alt="${
+                          product.name
+                        }" class="w-full h-64 object-cover cursor-pointer" onclick="openProductModal('${
+                          product.id
+                        }')">
+                        
+                        <!-- Discount Badge -->
+                        ${product.discount>0 ? `
+                            <div class="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-sm font-semibold">
+                                ${product.discount}%
+                            </div>
+                        ` : ''}
+                          
+                        <!-- Stock Status -->
+                        ${!product.inStock ? `
+                            <div class="absolute top-3 right-3 bg-gray-800 text-white px-2 py-1 rounded-md text-sm font-semibold">
+                                Out of Stock
+                            </div>
+                        ` : ''}
+
+                        <div class="absolute top-60 right-4">
                             <div class="bg-white dark:bg-gray-800 rounded-full px-2 py-1 text-sm font-semibold flex items-center">
                                 <i class="fas fa-star text-yellow-400 mr-1"></i>
                                 ${product.rating}
@@ -62,7 +79,24 @@ function renderProducts(productsToRender = filteredProducts) {
                           0,
                           80
                         )}...</p>
-                        <div class="flex items-center justify-between">
+
+                        <!-- Pricing -->
+                        <div class="mb-4">
+                            ${product.discount>0 ? `
+                                <div class="flex items-center gap-2">
+                                    <span class="text-2xl font-bold text-green-600">${formatCurrency(product.discountPrice.toFixed(2))}</span>
+                                    <span class="text-lg text-gray-500 line-through">${formatCurrency(product.price.toFixed(2))}</span>
+                                    <span class="text-sm text-green-600 font-semibold">Save ${formatCurrency((product.price-product.discountPrice).toFixed(2))}</span>
+                                </div>
+                            ` : `
+                                <div class="flex items-center">
+                                    <span class="text-2xl font-bold text-gray-800 dark:text-gray-300">${formatCurrency(product.price.toFixed(2))}</span>
+                                </div>
+                            `}
+                        </div>
+
+
+                       <!-- <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-primary-600">${formatCurrency(
                               product.price
                             )}</span>
@@ -72,12 +106,28 @@ function renderProducts(productsToRender = filteredProducts) {
                                 <i class="fas fa-cart-plus"></i>
                                 <span>Add to Cart</span>
                             </button>
+                        </div> -->
+
+                        <div>
+                            ${product.inStock ? `
+                            <div class="flex items-center gap-2">
+                            
+                                <button onclick="addToCart('${product.id}')" 
+                                        class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center gap-2">
+                                    <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                                    Add to Cart
+                                </button>
+                            </div>
+                        ` : `
+                            <button disabled class="w-full bg-gray-300 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
+                                Out of Stock
+                            </button>
+                        `}
                         </div>
+
                     </div>
-                </div>
-            `
-    )
-    .join("");
+                </div>`
+              ).join("");
 }
 
 // Search functionality
@@ -264,12 +314,20 @@ function updateCartQuantity(productId, quantity) {
 
 function updateCartUI() {
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce((sum, item) => sum + (item.product?.price || 0) * item.quantity,0);
+  // const totalPrice = cart.reduce((sum, item) => sum + (item.product?.price || 0) * item.quantity,0);
   // const totalPrice = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+
+  const totalPrice = cart.reduce((sum, item) => {
+  const price = item.product?.discountPrice > 0 ? item.product.discountPrice : item.product?.price || 0;
+  return sum + price * item.quantity; 
+  }, 0);
+
 
   cartCount.textContent = totalItems;
   cartTotal.textContent = `${formatCurrency(totalPrice.toFixed(2))}`;
-  document.getElementById("checkoutTotal").textContent = `${formatCurrency(totalPrice.toFixed(2))}`;
+  document.getElementById("subtotalAmount").textContent = `${formatCurrency(totalPrice.toFixed(2))}`;
+  document.getElementById("shippingAmount").textContent = shippingFee;
+  document.getElementById("checkoutTotal").textContent = `${formatCurrency((totalPrice + shippingFee).toFixed(2))}`
 
   if (cart.length === 0) {
     emptyCart.classList.remove("hidden");
@@ -280,33 +338,33 @@ function updateCartUI() {
     emptyCart.classList.add("hidden");
     cartFooter.classList.remove("hidden");
 
-    cartItems.innerHTML = cart
-      .map(
-        (item) => `
+    cartItems.innerHTML = cart.map((item) => `
                     <div class="flex items-center space-x-4 py-4 border-b border-gray-200 dark:border-gray-700">
-                            <img src="${item.product.imageId}" alt="${item.product.name}" class="w-16 h-16 object-cover rounded">
+                            <img src="${item.product.imageId || item.product.image}" alt="${item.product.name}" class="w-16 h-16 object-cover rounded">
+                           
                             <div class="flex-1">
-                                <h4 class="font-semibold">${
-                                  item.product.name
-                                }</h4>
-                                <p class="text-primary-600 font-bold">${formatCurrency(
-                                  item.product.price
-                                )}</p>
+                                <h4 class="font-semibold">${item.product.name}</h4>
+
+                              ${item.product.discountPrice>0
+                                ?`<p class="text-primary-600 font-bold">${formatCurrency(item.product.discountPrice)}</p>`
+                                :`<p class="text-primary-600 font-bold">${formatCurrency(item.product.price)}</p>`
+                              } 
                             </div>
+
                             <div class="flex items-center space-x-2">
                                 <button onclick="updateCartQuantity('${
                                   item.product.id
                                 }', ${
-          item.quantity - 1
-        })" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">-</button>
+                             item.quantity - 1
+                            })" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">-</button>
                                     <span class="w-8 text-center">${
                                       item.quantity
                                     }</span>
                                 <button onclick="updateCartQuantity('${
                                   item.product.id
                                 }', ${
-          item.quantity + 1
-        })" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">+</button>
+                              item.quantity + 1
+                            })" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">+</button>
                             </div>
                             <button onclick="removeFromCart('${
                               item.product.id
@@ -314,8 +372,7 @@ function updateCartUI() {
                                 <i class="fas fa-trash"></i>
                             </button>
                     </div>`
-      )
-      .join("");
+      ).join("");
   }
 }
 
@@ -347,19 +404,12 @@ function openProductModal(productId) {
   const modal = document.getElementById("productModal");
 
   document.getElementById("modalTitle").textContent = currentProduct.name;
-  document.getElementById("modalImage").src = currentProduct.imageId;
+  document.getElementById("modalImage").src = currentProduct.image;
   document.getElementById("modalImage").alt = currentProduct.name;
-  document.getElementById("modalPrice").textContent = `${formatCurrency(
-    currentProduct.price
-  )}`;
-  document.getElementById("modalDescription").textContent =
-    currentProduct.description;
-  document.getElementById("modalRating").innerHTML = generateStars(
-    currentProduct.rating
-  );
-  document.getElementById(
-    "modalRatingText"
-  ).textContent = `(${currentProduct.rating}/5)`;
+  document.getElementById("modalPrice").textContent = `${formatCurrency(currentProduct.discountPrice > 0 ? currentProduct.discountPrice : currentProduct.price)}`;
+  document.getElementById("modalDescription").textContent = currentProduct.description;
+  document.getElementById("modalRating").innerHTML = generateStars(currentProduct.rating);
+  document.getElementById("modalRatingText").textContent = `(${currentProduct.rating}/5)`;
   document.getElementById("modalQuantity").value = 1;
 
   modal.classList.remove("hidden");
@@ -476,6 +526,11 @@ function setupCheckoutModal() {
   checkoutForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+      totalAmount = cart.reduce((sum, item) => {
+          const price = item.product?.discountPrice > 0 ? item.product.discountPrice : item.product?.price || 0;
+          return sum + price * item.quantity;
+          }, 0);
+
     await fetchReceiptId(); // Generate Receipt ID
 
     paymentMethod = document.getElementById("paymentMethod").value;
@@ -494,7 +549,9 @@ function setupCheckoutModal() {
 //1. Create order
 function rzpCheckout() {
 
-  const amount = cart.reduce((sum, item) => sum + (item.product?.price || 0) * item.quantity,0);
+  // const amount = cart.reduce((sum, item) => sum + (item.product?.price || 0) * item.quantity,0);
+  const amount = parseFloat(totalAmount+shippingFee).toFixed(2);
+  console.log("PAisaCheking:",totalAmount,":Amount",amount);
 
   if (isNaN(amount) && amount <= 0 && !amount) {
     alert("Please enter a valid amount greater than 0");
@@ -516,8 +573,8 @@ function rzpCheckout() {
       let phoneNo = document.getElementById("addPhoneNo").value;
 
       const options = {
-        key: "rzp_test_kM7HJJbp7bkdwA",
-        // "key": razorpayKey,
+        // key: "rzp_test_kM7HJJbp7bkdwA",
+        key: RAZORPAY_KEY_ID,
         amount: order.amount,
         currency: order.currency,
         name: "RMR",
@@ -617,7 +674,7 @@ async function SaveOrderData() {
   const items = cart.map((item) => ({
     productId: item.product.id,
     quantity: item.quantity,
-    price: item.product.price,
+    price: item.product?.discountPrice > 0 ? item.product.discountPrice : item.product?.price || 0
   }));
 
   // 3. Prepare full order payload
@@ -650,11 +707,9 @@ async function SaveOrderData() {
 
       checkoutModal.classList.add("hidden");
       document.body.style.overflow = "auto";
-
-      totalAmount = cart.reduce((sum, item) => sum + (item.product?.price || 0) * item.quantity,0);
-
       cart = [];
       updateCartUI();
+
     } else {
       const err = await response.text();
       alert("Order failed: " + err);
@@ -728,7 +783,7 @@ const thanksTotal = document.getElementById("thanksTotal");
 function showModal() {
   // Generate new order number
   orderNumber.textContent = receiptId;
-  thanksTotal.textContent = formatCurrency(totalAmount);
+  thanksTotal.textContent = formatCurrency(totalAmount+shippingFee);
 
   // Show overlay
   modalOverlay.classList.remove("hidden");
@@ -844,27 +899,67 @@ function runAfterLogin() {
 }
 
 //Fetch all product and Start application
+// document.addEventListener("DOMContentLoaded", () => {
+//   fetch("/products/getAllProduct")
+//     .then((response) => response.json())
+//     .then((products) => {
+//       allProducts = [...products];
+//       filteredProducts = [...products];
+//       console.log(allProducts);
+//       renderProducts();
+//       init();
+//     })
+//     .catch((error) => console.error("Error fetching product:", error));
+// });
+
+// //If user is logged in then fetch all user cart item
+// document.addEventListener("DOMContentLoaded", () => {
+//   if (typeof isAuthenticated !== "undefined" && isAuthenticated) {
+//     fetch("/cart/getAllCartItems")
+//       .then((response) => response.json())
+//       .then((cartItems) => {
+//         cart = [...cartItems];
+//         runAfterLogin();
+//       })
+//       .catch((error) => console.error("User is not authenticated", error));
+//   }
+// });
+
 document.addEventListener("DOMContentLoaded", () => {
   fetch("/products/getAllProduct")
     .then((response) => response.json())
     .then((products) => {
       allProducts = [...products];
       filteredProducts = [...products];
+      console.log("Products loaded:", allProducts);
       renderProducts();
       init();
+
+      // Load cart item if user is logged In and after product is loaded
+      if (typeof isAuthenticated !== "undefined" && isAuthenticated) {
+        return fetch("/cart/getAllCartItems");
+      }
     })
-    .catch((error) => console.error("Error fetching product:", error));
+    .then((response) => response?.json())
+    .then((cartItems) => {
+      if (cartItems) {
+        cart = [...cartItems];
+
+        cart = cartItems.map(item => {
+            const fullProduct = allProducts.find(p => p.id === item.product.id);
+            if (fullProduct) {
+              item.product.discountPrice = fullProduct.discountPrice;
+              item.product.price = fullProduct.price; // optional
+            }
+            return item;
+          });
+
+        runAfterLogin();
+        console.log("Cart items loaded:", cart);
+      }
+    })
+    .catch((error) => {
+      console.error("Error loading products or cart:", error);
+    });
 });
 
-//If user is logged in then fetch all user cart item
-document.addEventListener("DOMContentLoaded", () => {
-  if (typeof isAuthenticated !== "undefined" && isAuthenticated) {
-    fetch("/cart/getAllCartItems")
-      .then((response) => response.json())
-      .then((cartItems) => {
-        cart = [...cartItems];
-        runAfterLogin();
-      })
-      .catch((error) => console.error("User is not authenticated", error));
-  }
-});

@@ -39,9 +39,10 @@ public interface CartRepository extends JpaRepository<CartItem,String> {
     @Query("DELETE FROM CartItem c WHERE c.user = :user")
     void deleteAllCartItem(@Param("user") User user);
 
-    @Query("SELECT SUM(ci.quantity * p.price) " +
-           "FROM CartItem ci " +
-           "JOIN ci.product p " +
-           "WHERE ci.user = :user")
-    Float getTotalCartAmountByUserId(@Param("user") User user);
+    // @Query("SELECT SUM(ci.quantity * p.price) " +
+    //        "FROM CartItem ci " +
+    //        "JOIN ci.product p " +
+    //        "WHERE ci.user = :user")
+    // Float getTotalCartAmountByUserId(@Param("user") User user);
+
 } 

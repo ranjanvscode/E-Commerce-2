@@ -1,4 +1,4 @@
-package com.ecommerce.Forms;
+package com.ecommerce.RequestForm;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

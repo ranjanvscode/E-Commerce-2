@@ -3,3 +3,219 @@ line 694
                                 ${order?.paymentStatus.charAt(0).toUpperCase() + order?.paymentStatus.slice(1)}
                             </span>  -->
 
+script product code :
+
+`<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                    <div class="relative">
+                        <img src="${product.imageId}" alt="${
+        product.name
+      }" class="w-full h-64 object-cover cursor-pointer" onclick="openProductModal('${
+        product.id 
+      }')">
+                        <div class="absolute top-4 right-4">
+                            <div class="bg-white dark:bg-gray-800 rounded-full px-2 py-1 text-sm font-semibold flex items-center">
+                                <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                ${product.rating}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-lg font-semibold mb-2 cursor-pointer hover:text-primary-600 transition-colors" onclick="openProductModal('${
+                          product.id
+                        }')">${product.name}</h3>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">${product.description.substring(
+                          0,
+                          80
+                        )}...</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-primary-600">${formatCurrency(
+                              product.price
+                            )}</span>
+                            <span class="text-xl text-gray-500 line-through">${formatCurrency(
+                              product.price
+                            )}</span>
+                            <button onclick="addToCart('${
+                              product.id
+                            }')" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center space-x-2">
+                                <i class="fas fa-cart-plus"></i>
+                                <span>Add to Cart</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>`
+
+
+
+
+second code:
+
+function createProductCard(product) {
+            const hasDiscount = product.discount > 0;
+            const savings = hasDiscount ? calculateSavings(product.price, product.discountPrice) : 0;
+            
+            return `
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 max-w-sm mx-auto">
+                    <!-- Product Image -->
+                    <div class="relative group">
+                        <img src="${product.image}" alt="${product.name}" 
+                             class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
+                        
+                        <!-- Discount Badge -->
+                        ${hasDiscount ? `
+                            <div class="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-sm font-semibold">
+                                ${product.discount}%
+                            </div>
+                        ` : ''}
+                          
+                        <!-- Stock Status -->
+                        ${!product.inStock ? `
+                            <div class="absolute top-3 right-3 bg-gray-800 text-white px-2 py-1 rounded-md text-sm font-semibold">
+                                Out of Stock
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <!-- Product Info -->
+                    <div class="p-4">
+                        <!-- Category and Brand -->
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-gray-500 uppercase tracking-wide">${product.category}</span>
+                        </div>
+                        
+                        <!-- Product Name -->
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">${product.name}</h3>
+                        
+                        <!-- Description -->
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">${product.description}</p>
+                        
+                        <!-- Rating -->
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="flex items-center text-yellow-400 mr-2">
+                                ${generateStars(product.rating)}
+                            </div>
+                        </div>
+                        
+                        <!-- Pricing -->
+                        <div class="mb-4">
+                            ${hasDiscount ? `
+                                <div class="flex items-center gap-2">
+                                    <span class="text-2xl font-bold text-green-600">$${product.discountPrice.toFixed(2)}</span>
+                                    <span class="text-lg text-gray-500 line-through">$${product.price.toFixed(2)}</span>
+                                    <span class="text-sm text-green-600 font-semibold">Save $${savings.toFixed(2)}</span>
+                                </div>
+                            ` : `
+                                <div class="flex items-center">
+                                    <span class="text-2xl font-bold text-gray-800">$${product.price.toFixed(2)}</span>
+                                </div>
+                            `}
+                        </div> 
+
+                        
+                        <!-- Quantity Selector and Add to Cart -->
+                        ${product.inStock ? `
+                            <div class="flex items-center gap-2">
+                                <button onclick="addToCart(${product.id})" 
+                                        class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center gap-2">
+                                    <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                                    Add to Cart
+                                </button>
+                            </div>
+                        ` : `
+                            <button disabled class="w-full bg-gray-300 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
+                                Out of Stock
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+
+
+
+        third model:
+
+        function createProductCard(product) {
+            const hasDiscount = product.discount > 0;
+            const savings = hasDiscount ? calculateSavings(product.price, product.discountPrice) : 0;
+            
+            return `
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 w-full">
+                    <!-- Product Image -->
+                    <div class="relative group aspect-square">
+                        <img src="${product.image}" alt="${product.name}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        
+                        <!-- Discount Badge -->
+                        ${hasDiscount ? `
+                            <div class="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-sm font-semibold">
+                                ${product.discount}%
+                            </div>
+                        ` : ''}
+                          
+                        <!-- Stock Status -->
+                        ${!product.inStock ? `
+                            <div class="absolute top-3 right-3 bg-gray-800 dark:bg-gray-700 text-white px-2 py-1 rounded-md text-sm font-semibold">
+                                Out of Stock
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <!-- Product Info -->
+                    <div class="p-4 flex flex-col h-full">
+                        <!-- Category -->
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide">${product.category}</span>
+                        </div>
+                        
+                        <!-- Product Name -->
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2 line-clamp-2">${product.name}</h3>
+                        
+                        <!-- Description -->
+                        <p class="text-gray-600 dark:text-gray-300 text-sm mb-3 line-clamp-2 flex-grow">${product.description}</p>
+                        
+                        <!-- Rating -->
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="flex items-center text-yellow-400 mr-2">
+                                ${generateStars(product.rating)}
+                            </div>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">(${product.rating})</span>
+                        </div>
+                        
+                        <!-- Pricing -->
+                        <div class="mb-4">
+                            ${hasDiscount ? `
+                                <div class="flex items-center flex-wrap gap-3">
+                                    <span class="text-2xl font-bold text-green-600 dark:text-green-400">$${product.discountPrice.toFixed(2)}</span>
+                                    <span class="text-lg text-gray-500 dark:text-gray-400 line-through">$${product.price.toFixed(2)}</span>
+                                    <span class="text-sm text-green-600 dark:text-green-400 font-semibold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">
+                                        Save $${savings.toFixed(2)}
+                                    </span>
+                                </div>
+                            ` : `
+                                <div class="flex items-center">
+                                    <span class="text-2xl font-bold text-gray-800 dark:text-gray-100">$${product.price.toFixed(2)}</span>
+                                </div>
+                            `}
+                        </div>
+
+                        <!-- Add to Cart Button -->
+                        ${product.inStock ?`
+                            <div class="flex items-center gap-2 mt-auto">
+                                <button onclick="addToCart(${product.id})" 
+                                        class="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors duration-200 flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5-6m0 0h15M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z"></path>
+                                    </svg>
+                                    Add to Cart
+                                </button>
+                            </div>
+                        ` : `
+                            <button disabled class="w-full bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 py-2 px-4 rounded-md cursor-not-allowed mt-auto">
+                                Out of Stock
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
