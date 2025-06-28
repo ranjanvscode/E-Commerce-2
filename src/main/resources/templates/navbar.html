@@ -1,17 +1,26 @@
 
 <header th:fragment="userNavbar" class="bg-gray-100 dark:bg-gray-800 shadow-lg sticky top-0 z-50 transition-colors duration-300">
-        <div class="fixed top-0 left-0 w-full bg-gray-100 dark:bg-gray-800  shadow-md z-50 container mx-auto px-4 py-4">
+        <div class="w-full bg-gray-100 dark:bg-gray-800 z-50 container mx-auto px-4 py-3">
             <div class="flex items-center justify-between">
-
-                <!-- Hamburger Menu Button -->
-                <button id="menuToggle" class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                    <svg id="hamburgerIcon" class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                    <svg id="closeIcon" class="w-6 h-6 text-gray-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
+                
+                <div class="flex">
+                    <!-- Hamburger Menu Button -->
+                    <button id="menuToggle" class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                        <svg id="hamburgerIcon" class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        <svg id="closeIcon" class="w-6 h-6 text-gray-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Logo -->
+                    <div class="flex items-center space-x-2">
+                        <!-- <i class="fas fa-shopping-bag text-2xl text-primary-600"></i> -->
+                        <img th:src="@{/images/rmr.png}" alt="" class="img-fluid" style="width: 50px;" >
+                        <!-- <h1 class="text-2xl font-bold text-primary-600">RMR</h1> -->
+                    </div>
+                </div>
 
                 <div th:replace="~{message :: messageBox}" >
                 </div>
@@ -26,8 +35,8 @@
                     </svg>
                     <span class="sr-only">Info</span>
                     <div>
-                    <span class="font-medium" th:text="${param.error}"></span>
-                    </div>
+                        <span class="font-medium" th:text="${param.error}"></span>
+                    </div> 
                 </div>
 
                 <!-- Logout Message -->
@@ -42,13 +51,6 @@
                     <div>
                         <span class="font-medium"></span> You have been logged out.
                     </div>
-                </div>
-
-                <!-- Logo -->
-                <div class="flex items-center space-x-2">
-                    <!-- <i class="fas fa-shopping-bag text-2xl text-primary-600"></i> -->
-                    <img src="/images/rmr.png" alt="" class="img-fluid" style="width: 50px;" >
-                    <!-- <h1 class="text-2xl font-bold text-primary-600">RMR</h1> -->
                 </div>
 
                 <!-- Header Actions -->
@@ -67,8 +69,14 @@
 
                     <button id="loginBtn" 
                             th:style="${#authorization.expression('isAuthenticated()')} ? 'display:none' : ''"
-                            class="hidden md:flex items-center space-x-2 px-4 py-2 text-primary-600 hover:text-primary-700 transition-colors">
-                        <i class="fas fa-user"></i>
+                            class="
+                                md:inline-flex
+                                items-center
+                                space-x-2
+                                px-4 py-2
+                                text-primary-600 hover:text-primary-700 transition-colors">
+
+                            <i class="fas fa-user"></i>
                         <span>Login</span>
                     </button>
 

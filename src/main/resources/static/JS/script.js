@@ -925,6 +925,25 @@ function runAfterLogin() {
 //   }
 // });
 
+   window.addEventListener('DOMContentLoaded', () => {
+        const message = document.getElementById('serverMessage');
+        if (message) {
+            // Trigger fade-in
+            setTimeout(() => {
+                message.style.opacity = '1';
+            }, 100); // slight delay ensures transition triggers
+
+            // Auto hide with fade-out
+            setTimeout(() => {
+                message.style.opacity = '0';
+                // Optional: remove from DOM after fade-out
+                setTimeout(() => {
+                    message.remove();
+                }, 500); // match with transition duration
+            }, 4000); // show for 4 seconds
+        }
+    });
+    
 document.addEventListener("DOMContentLoaded", () => {
   fetch("/products/getAllProduct")
     .then((response) => response.json())

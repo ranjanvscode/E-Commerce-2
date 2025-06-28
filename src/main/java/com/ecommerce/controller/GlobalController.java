@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.ecommerce.model.User;
@@ -26,5 +27,10 @@ public class GlobalController {
             User user = userRepo.getUserByEmail(email);
             model.addAttribute("user", user);
         }
+    }
+
+    @ExceptionHandler(Exception.class)
+    public String handleAll(Exception ex) {
+        return "error/errorPage";
     }
 }

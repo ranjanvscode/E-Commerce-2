@@ -4,21 +4,47 @@
     <title id="title">RMR - Your Ultimate Shopping Destination</title>
 </head>
 <body>
-    <div id="content" class="pt-20">
+    <div id="content">
 
     <!-- Hero Section -->
-    <section 
-        class="w-full h-64 sm:h-80 md:h-[580px] bg-center bg-cover bg-no-repeat" style="background-image: url('/images/websiteBanner.jpg');">
-            <!-- class="bg-gradient-to-r from-primary-600 to-purple-600 text-white py-20" -->
-        <!-- <div class="container mx-auto px-4 text-center">
-            <h2 class="text-4xl md:text-6xl font-bold mb-4">Welcome to RMR</h2>
-            <p class="text-xl md:text-2xl mb-8 opacity-90">Discover amazing food and beverages at unbeatable prices</p>
-            <button onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})" 
-                    class="bg-gray-100 text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                Shop Now
-            </button>
-        </div> -->
+    <section class="w-full">
+        <div class="relative w-full bg-gray-200 overflow-hidden">
+            <img 
+            src="/images/websiteBanner.jpg"     
+            alt="Website Banner"
+            class="w-full h-auto object-cover bg-white"
+            />
+        </div>
     </section>
+
+    <!-- Image Slide Code -->
+    <!-- <section class="w-full">
+        <div class="relative w-full overflow-hidden">
+        Slider Container
+            <div id="slider" class="flex transition-transform duration-700 ease-in-out w-[500%]">
+                <img src="/images/slide1.jpg" alt="Slide 1" class="w-full h-auto object-cover" />
+                <img src="/images/slide2.jpg" alt="Slide 2" class="w-full h-auto object-cover" />
+                <img src="/images/slide3.jpg" alt="Slide 3" class="w-full h-auto object-cover" />
+                <img src="/images/slide4.jpg" alt="Slide 4" class="w-full h-auto object-cover" />
+                <img src="/images/slide5.jpg" alt="Slide 5" class="w-full h-auto object-cover" />
+            </div>
+        </div>
+    </section> 
+    
+    <script>
+    const slider = document.getElementById('slider');
+    let index = 0;
+    const totalSlides = 5;
+
+    setInterval(() => {
+        index = (index + 1) % totalSlides;
+        slider.style.transform = `translateX(-${index * 100}%)`;
+    }, 3000); // Change slide every 3 seconds
+    </script> -->
+    
+    <!-- Close Images slide -->
+
+
 
     <!-- Filters -->
     <section class="bg-gray-100 dark:bg-gray-800 py-6 border-b border-gray-200 dark:border-gray-700">

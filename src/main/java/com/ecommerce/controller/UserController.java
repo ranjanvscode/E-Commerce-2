@@ -19,7 +19,7 @@ import jakarta.validation.Valid;
 public class UserController {
 
     @Autowired
-    UserServiceImpl userService = new UserServiceImpl();
+    UserServiceImpl userService;
 
     @PostMapping("/register")
     public String doRegister(@Valid @ModelAttribute UserRequest userForm, BindingResult errorResult,HttpSession session) {
@@ -42,7 +42,7 @@ public class UserController {
         Message msg=null;
         if (data==null) {
             
-            msg = Message.builder().content("User already exist").type(MessageType.green).build();
+            msg = Message.builder().content("User already exist").type(MessageType.red).build();
         }else{
 
             msg = Message.builder().content("Registration Successful").type(MessageType.green).build();

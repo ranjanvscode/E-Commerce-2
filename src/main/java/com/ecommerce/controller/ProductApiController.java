@@ -61,7 +61,7 @@ public class ProductApiController {
         // return productService.getAllProduct();
     }
 
-
+ 
     @PostMapping("/save")
     public String postMethodName(@ModelAttribute ProductRequest product, BindingResult result) {
 

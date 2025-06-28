@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.ecommerce.RequestForm.UserRequest;
 import com.ecommerce.service.ProductService;
 
+
 @Controller
 public class RootController {
 
@@ -51,7 +52,6 @@ public class RootController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/adminpannel")
     public String adminpannel(Model model) {
-
         model.addAttribute("admin", true);
         return "admin/adminpannel";
     }
@@ -61,5 +61,4 @@ public class RootController {
 
       return "error/access-denied";
     }
-    
 }
