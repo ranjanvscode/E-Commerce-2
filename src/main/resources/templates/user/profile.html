@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title" >My Account - Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease-out; 
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(16px) saturate(180%);
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(209, 213, 219, 0.3);
+        }
+        
+        .dark .glass-effect {
+            background-color: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+        }
+        
+        .edit-mode {
+            display: none;
+        }
+        
+        .edit-mode.active {
+            display: block;
+        }
+        
+        .view-mode.editing {
+            display: none;
+        }
+    </style>
+</head>
+<body id="content">
+
+    <div class="bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen transition-colors duration-300">
+
+    <!-- Navigation -->
+    <nav class="glass-effect sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">RMR</span>
+                    </div>
+                    <!-- <span class="font-semibold text-gray-900 dark:text-white">RMR</span> -->
+                </div>
+
+                <nav>
+                    <a href="/home" class="text-gray-900 dark:text-white px-4">Home</a>
+                    
+                    <a href="/user/order" class="text-gray-900 dark:text-white px-4">Order</a>
+
+                    <a href="/help" class="text-gray-900 dark:text-white px-4">Contact</a>
+                </nav>
+                
+                <div class="flex items-center space-x-4">
+
+                    <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <svg id="moonIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="mb-8 fade-in">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">My Account</h1>
+            <p class="text-gray-600 dark:text-gray-300 mt-2">Manage your account information and preferences</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Sidebar Navigation -->
+            <div class="lg:col-span-1">
+                <div class="glass-effect rounded-2xl p-6 fade-in">
+                    <div class="text-center mb-6">
+                        <div class="relative inline-block">
+                            <img id="profileAvatar" src="/placeholder.svg?height=80&width=80" alt="Profile" class="w-20 h-20 rounded-full mx-auto border-4 border-white dark:border-gray-700 shadow-lg cursor-pointer hover:opacity-80 transition-opacity">
+                            <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-gray-700"></div>
+                        </div>
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mt-3" id="displayName">John Doe</h2>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm" id="displayEmail">john.doe@email.com</p>
+                    </div>
+
+                    <nav class="space-y-2">
+                        <button class="nav-item w-full text-left px-4 py-3 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium" data-section="personal">
+                            <svg class="w-5 h-5 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            Personal Information
+                        </button>
+                        
+                        <button class="nav-item w-full text-left px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" data-section="addresses">
+                            <svg class="w-5 h-5 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Addresses
+                        </button>
+                        
+                        <!-- <button class="nav-item w-full text-left px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" data-section="orders">
+                            <svg class="w-5 h-5 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                            Order History
+                        </button>
+                        
+                        <button class="nav-item w-full text-left px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" data-section="payment">
+                            <svg class="w-5 h-5 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                            </svg>
+                            Payment Methods
+                        </button>
+                        
+                        <button class="nav-item w-full text-left px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" data-section="preferences">
+                            <svg class="w-5 h-5 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Preferences
+                        </button> -->
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="lg:col-span-2">
+                <!-- Personal Information Section -->
+                <div id="personal" class="content-section glass-effect rounded-2xl p-6 fade-in">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Personal Information</h2>
+                        <button id="editPersonalBtn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            Edit
+                        </button>
+                    </div>
+
+                    <!-- View Mode -->
+                    <div id="personalViewMode" class="view-mode space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">First Name</label>
+                                <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                    <span id="viewFirstName" class="text-gray-900 dark:text-white">John</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Name</label>
+                                <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                    <span id="viewLastName" class="text-gray-900 dark:text-white">Doe</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+                            <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                <span id="viewEmail" class="text-gray-900 dark:text-white">john.doe@email.com</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
+                            <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                <span id="viewPhone" class="text-gray-900 dark:text-white">+1 (555) 123-4567</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date of Birth</label>
+                            <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                <span id="viewDob" class="text-gray-900 dark:text-white">January 15, 1990</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Mode -->
+                    <div id="personalEditMode" class="edit-mode space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">First Name</label>
+                                <input type="text" id="editFirstName" value="John" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Name</label>
+                                <input type="text" id="editLastName" value="Doe" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+                            <input type="email" id="editEmail" value="john.doe@email.com" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
+                            <input type="tel" id="editPhone" value="+1 (555) 123-4567" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date of Birth</label>
+                            <input type="date" id="editDob" value="1990-01-15" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <button id="savePersonalBtn" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+                                Save Changes
+                            </button>
+                            <button id="cancelPersonalBtn" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Addresses Section -->
+                <div id="addresses" class="content-section glass-effect rounded-2xl p-6 fade-in hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Shipping Addresses</h2>
+                        <button id="addAddressBtn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Add Address
+                        </button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div id="addressList" class="space-y-4"></div>
+                        <!-- <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center mb-2">
+                                        <h3 class="font-medium text-gray-900 dark:text-white">Home</h3>
+                                        <span class="ml-2 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">Default</span>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-300">John Doe</p>
+                                    <p class="text-gray-600 dark:text-gray-300">123 Main Street</p>
+                                    <p class="text-gray-600 dark:text-gray-300">New York, NY 10001</p>
+                                    <p class="text-gray-600 dark:text-gray-300">United States</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-500 hover:text-blue-700">Edit</button>
+                                    <button class="text-red-500 hover:text-red-700">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-medium text-gray-900 dark:text-white mb-2">Office</h3>
+                                    <p class="text-gray-600 dark:text-gray-300">John Doe</p>
+                                    <p class="text-gray-600 dark:text-gray-300">456 Business Ave</p>
+                                    <p class="text-gray-600 dark:text-gray-300">New York, NY 10002</p>
+                                    <p class="text-gray-600 dark:text-gray-300">United States</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-500 hover:text-blue-700">Edit</button>
+                                    <button class="text-red-500 hover:text-red-700">Delete</button>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+
+                <!-- Order History Section -->
+                <div id="orders" class="content-section glass-effect rounded-2xl p-6 fade-in hidden">
+                    <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Order History</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 class="font-medium text-gray-900 dark:text-white">Order #12345</h3>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">Placed on December 15, 2023</p>
+                                </div>
+                                <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-sm rounded-full">Delivered</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p class="text-gray-600 dark:text-gray-300">3 items • Total: $89.97</p>
+                                <button class="text-blue-500 hover:text-blue-700 text-sm">View Details</button>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 class="font-medium text-gray-900 dark:text-white">Order #12344</h3>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">Placed on December 10, 2023</p>
+                                </div>
+                                <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm rounded-full">Shipped</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p class="text-gray-600 dark:text-gray-300">2 items • Total: $45.98</p>
+                                <button class="text-blue-500 hover:text-blue-700 text-sm">Track Order</button>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 class="font-medium text-gray-900 dark:text-white">Order #12343</h3>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">Placed on December 5, 2023</p>
+                                </div>
+                                <span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-sm rounded-full">Processing</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p class="text-gray-600 dark:text-gray-300">1 item • Total: $29.99</p>
+                                <button class="text-blue-500 hover:text-blue-700 text-sm">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Methods Section -->
+                <div id="payment" class="content-section glass-effect rounded-2xl p-6 fade-in hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Payment Methods</h2>
+                        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Add Card
+                        </button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded flex items-center justify-center">
+                                        <span class="text-white text-xs font-bold">VISA</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">•••• •••• •••• 4242</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-300">Expires 12/25</p>
+                                    </div>
+                                    <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">Default</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-500 hover:text-blue-700">Edit</button>
+                                    <button class="text-red-500 hover:text-red-700">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-8 bg-gradient-to-r from-red-500 to-pink-600 rounded flex items-center justify-center">
+                                        <span class="text-white text-xs font-bold">MC</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">•••• •••• •••• 8888</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-300">Expires 08/26</p>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-500 hover:text-blue-700">Edit</button>
+                                    <button class="text-red-500 hover:text-red-700">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferences Section -->
+                <div id="preferences" class="content-section glass-effect rounded-2xl p-6 fade-in hidden">
+                    <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Account Preferences</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-medium text-gray-900 dark:text-white">Email Notifications</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Receive order updates and promotional emails</p>
+                            </div>
+                            <button class="relative inline-flex h-6 w-11 items-center rounded-full bg-blue-500 transition-colors duration-200">
+                                <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 translate-x-6"></span>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-medium text-gray-900 dark:text-white">SMS Notifications</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Get text messages for order status updates</p>
+                            </div>
+                            <button class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-200">
+                                <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 translate-x-1"></span>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-medium text-gray-900 dark:text-white">Marketing Communications</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Receive promotional offers and product recommendations</p>
+                            </div>
+                            <button class="relative inline-flex h-6 w-11 items-center rounded-full bg-blue-500 transition-colors duration-200">
+                                <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 translate-x-6"></span>
+                            </button>
+                        </div>
+
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                            <h3 class="font-medium text-gray-900 dark:text-white mb-4">Language & Region</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Language</label>
+                                    <select class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+                                        <option>English</option>
+                                        <option>Spanish</option>
+                                        <option>French</option>
+                                        <option>German</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Currency</label>
+                                    <select class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+                                        <option>USD ($)</option>
+                                        <option>EUR (€)</option>
+                                        <option>GBP (£)</option>
+                                        <option>CAD ($)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                            <button class="w-full bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors font-medium">
+                                Delete Account
+                            </button>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 text-center">This action cannot be undone</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    </div>
+</body>
+<script src="/JS/profile.js"></script>
+</html>

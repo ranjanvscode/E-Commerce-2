@@ -21,6 +21,7 @@ public class ProductResponse {
     private BigDecimal discountPrice;
     private BigDecimal discount;
     private String image;
+    private String cImageId;
     private boolean inStock;
     private String category;
     private Float rating;

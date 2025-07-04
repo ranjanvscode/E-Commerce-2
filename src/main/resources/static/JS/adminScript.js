@@ -40,48 +40,79 @@
             localStorage.setItem('products', JSON.stringify(products));
         }
 
-        // Render products
+
         function renderProducts() {
             const grid = document.getElementById('productsGrid');
             const emptyState = document.getElementById('emptyState');
-            
-            if (products.length === 0) {
+
+            // Handle empty state
+            if (!products.length) {
                 grid.classList.add('hidden');
                 emptyState.classList.remove('hidden');
                 return;
             }
-            
             grid.classList.remove('hidden');
             emptyState.classList.add('hidden');
-            
+
+            // Helper: Render category badge
+            const renderCategory = (category) =>
+                `<span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full">${category}</span>`;
+
+            // Helper: Render rating
+            const renderRating = (rating) =>
+                `<div class="ml-auto flex items-center">
+                    <span class="text-yellow-400">★</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400 ml-1">${rating}</span>
+                </div>`;
+
+            // Helper: Render price with discount
+            const renderPrice = (price, discount, discountPrice) => {
+                if (discount && discount > 0 && discountPrice && discountPrice < price) {
+                    return `
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-bold text-green-600 dark:text-green-400">₹${discountPrice}</span>
+                            <span class="text-base text-gray-500 line-through">₹${price}</span>
+                            <span class="text-xs text-green-600 font-semibold">${discount}%</span>
+                        </div>
+                    `;
+                }
+                return `<span class="text-lg font-bold text-green-600 dark:text-green-400">₹${price}</span>`;
+            };
+
+            // Helper: Render description
+            const renderDescription = (desc) => 
+                `<p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">${desc}</p>`;
+
+            // Helper: Render action buttons
+            const renderActions = (id, cImageId) =>
+                `<div class="flex space-x-2">
+                    <button onclick="editProduct('${id}')" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors">
+                        Update
+                    </button>
+                    <button onclick="deleteProduct('${id}','${cImageId ? cImageId : ''}')" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors">
+                        Delete
+                    </button>
+                </div>`;
+
+            // Render all products
             grid.innerHTML = products.map(product => `
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow animate-fade-in">
                     <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
                     <div class="p-4">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate">${product.name}</h3>
-                            <span class="text-lg font-bold text-green-600 dark:text-green-400">$${product.price}</span>
+                            ${renderPrice(product.price, product.discount, product.discountPrice)}
                         </div>
                         <div class="flex items-center mb-2">
-                            <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full">${product.category}</span>
-                            <div class="ml-auto flex items-center">
-                                <span class="text-yellow-400">★</span>
-                                <span class="text-sm text-gray-600 dark:text-gray-400 ml-1">${product.rating}</span>
-                            </div>
+                            ${renderCategory(product.category)}
+                            ${renderRating(product.rating)}
                         </div>
-                        <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">${product.description}</p>
-                        <div class="flex space-x-2">
-                            <button onclick="editProduct('${product.id}')" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors">
-                                Update
-                            </button>
-                            <button onclick="deleteProduct('${product.id}')" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors">
-                                Delete
-                            </button>
-                        </div>
+                        ${renderDescription(product.description)}
+                        ${renderActions(product.id, product.cimageId)}
                     </div>
                 </div>
             `).join('');
-        }
+        }                       
 
         // Modal functions
         function openAddModal() {
@@ -115,6 +146,7 @@
         // Form submission
         function handleFormSubmit(e) {
                 e.preventDefault();
+                showProductLoading();
 
                 const form = document.getElementById('productForm');
                 const formData = new FormData();
@@ -144,6 +176,7 @@
                         body: formData 
                     })
                     .then(response => {
+                        hideProductLoading();
                         if (response.ok) {
                             editingProductId=null;
                             showToast('Product updated successfully!', 'success');
@@ -154,6 +187,7 @@
                         }
                     })
                     .catch(error => {
+                        hideProductLoading();
                         console.error('Error:', error);
                         showToast('Something went wrong!', 'error');
                     });
@@ -164,6 +198,7 @@
                         body: formData 
                     })
                     .then(response => {
+                        hideProductLoading();
                         if (response.ok) {
                             showToast('Product added successfully!', 'success');
                             form.reset();
@@ -173,6 +208,7 @@
                         }
                     })
                     .catch(error => {
+                        hideProductLoading();
                         console.error('Error:', error);
                         showToast('Something went wrong!', 'error');
                     });
@@ -181,9 +217,11 @@
 
         // Delete functions
         let productToDelete = null;
+        let productImageId = null;
 
-        function deleteProduct(id) {
+        function deleteProduct(id, imageId) {
             productToDelete = id;
+            productImageId = imageId;
             document.getElementById('deleteModal').classList.remove('hidden');
         }
 
@@ -193,11 +231,17 @@
         }
 
         function confirmDelete() {
-            console.log("Delete function",productToDelete);
-
             if (productToDelete) {
-                fetch(`/products/delete/${productToDelete}`, {
-                    method: 'DELETE'
+                showDeleteLoading();
+                fetch(`/products/delete`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: productToDelete,
+                        imageId: productImageId
+                    })
                 })
                 .then(response => {
                     if (response.ok) {
@@ -215,6 +259,7 @@
                     showToast('Something went wrong!', 'error');
                 })
                 .finally(() => {
+                    hideDeleteLoading();
                     closeDeleteModal();
                 });
             } else {
@@ -248,6 +293,34 @@
                     toast.remove();
                 }
             }, 3000);
+        }
+
+        function showProductLoading() {
+            const btn = document.getElementById('submitProductBtn');
+            btn.disabled = true;
+            document.getElementById('submitProductText').classList.add('hidden');
+            document.getElementById('submitProductSpinner').classList.remove('hidden');
+        }
+
+        function hideProductLoading() {
+            const btn = document.getElementById('submitProductBtn');
+            btn.disabled = false;
+            document.getElementById('submitProductText').classList.remove('hidden');
+            document.getElementById('submitProductSpinner').classList.add('hidden');
+        }
+
+        function showDeleteLoading() {
+            const btn = document.getElementById('confirmDelete');
+            btn.disabled = true;
+            document.getElementById('deleteProductText').classList.add('hidden');
+            document.getElementById('deleteProductSpinner').classList.remove('hidden');
+        }
+
+        function hideDeleteLoading() {
+            const btn = document.getElementById('confirmDelete');
+            btn.disabled = false;
+            document.getElementById('deleteProductText').classList.remove('hidden');
+            document.getElementById('deleteProductSpinner').classList.add('hidden');
         }
 
         // Initialize the application

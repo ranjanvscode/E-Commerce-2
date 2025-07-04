@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/cart")
-public class CartController {
+public class CartController { 
 
     @Autowired
     UserService userService;
@@ -61,6 +61,8 @@ public class CartController {
         cartItem.setUser(user);
 
         cartService.savItem(cartItem);
+
+        System.out.println("Cart Item Saved: " + cartItem);
 
         return ResponseEntity.ok("Cart Saved");
     }

@@ -4,15 +4,15 @@
     <title id="title">RMR - Your Ultimate Shopping Destination</title>
 </head>
 <body>
-    <div id="content">
+    <div id="content"> 
 
     <!-- Hero Section -->
-    <section class="w-full">
+    <section class="w-full pt-[60px]">
         <div class="relative w-full bg-gray-200 overflow-hidden">
             <img 
-            src="/images/websiteBanner.jpg"     
-            alt="Website Banner"
-            class="w-full h-auto object-cover bg-white"
+                src="/images/banner.webp"     
+                alt="Website Banner"
+                class="w-full h-auto object-cover bg-white max-h-[400px] sm:max-h-[300px] md:max-h-[400px] lg:max-h-[500px] xl:max-h-[600px]"
             />
         </div>
     </section>
@@ -69,7 +69,7 @@
                     </select>
                 </div>
 
-                
+                 
                 <!-- Search Bar -->
                 <div class="hidden md:flex flex-1 max-w-lg mx-8">
                     <div class="relative w-full">
@@ -102,9 +102,9 @@
     </section>
 
     <!-- Products Section -->
-    <section id="products" class="py-16">
+    <section id="products" class="py-16 bg-warm dark:bg-gray-800">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">Featured Products</h2>
+            <h2 class="text-3xl font-bold text-center mb-12 text-primary2 dark:text-primary-600">Featured Products</h2>
             <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 <!-- Products will be dynamically inserted here -->
                  
@@ -236,7 +236,16 @@
                     <button type="submit" class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors mb-4">
                         Login
                     </button>
+                    <label for="remember-me" style="font-size: 1rem;">
+                        <input type="checkbox" name="remember-me" id="remember-me" style="width: 1em; height: 1em; vertical-align: middle; margin-right: 0.5em;">
+                        Remember me
+                    </label>
                     
+                        <!-- Forgot Password Link -->
+                    <p class="text-center mb-2">
+                        <a href="/forgot-password" class="text-primary-600 hover:text-primary-700 font-medium">Forgot Password?</a>
+                    </p>
+
                     <p class="text-center text-gray-600 dark:text-gray-400">
                         Don't have an account? 
                         <button type="button" id="showSignup" class="text-primary-600 hover:text-primary-700 font-medium">Sign up</button>
@@ -255,9 +264,8 @@
                     <button id="closeSignupModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
                         <i class="fas fa-times"></i>
                     </button>
-                </div>
-                
-                <form id="signupForm" th:action="register" method="post" th:object="${userForm}">
+                </div>          
+                <form id="signupForm" th:object="${userForm}"> 
                     <div class="mb-4">
                         <label class="block text-sm font-medium mb-2">Full Name</label>
                         <input type="text" th:field="*{name}" id="name" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-gray-100 dark:bg-gray-700">
@@ -358,11 +366,19 @@
                         </div>
                     </div> -->
 
-                    <button type="submit" class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors">
+                    <button type="submit" id="placeOrderBtn" class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors">
                             Place Order
                     </button>
                 </form>
             </div>
+        </div>
+        
+        <!-- Spinner overlay for checkout modal -->
+        <div id="checkoutSpinnerOverlay" class="hidden fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+        <svg class="animate-spin h-12 w-12 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+        </svg>
         </div>
     </div>
 
@@ -417,6 +433,7 @@
     </div>
 </body>
 
-<script th:src="@{/JS/sidebar.js}"></script>
+<!-- <script th:src="@{/JS/sidebar.js}"></script> -->
 <script th:src="@{/JS/script.js}"></script>
+<!-- <script type="module" src="/js/main.js"></script> -->
 </html>

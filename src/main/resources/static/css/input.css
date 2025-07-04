@@ -1,0 +1,6 @@
+/* File: src/main/resources/static/css/input.css */
+/* This file is used to import Tailwind CSS styles and custom styles. */
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

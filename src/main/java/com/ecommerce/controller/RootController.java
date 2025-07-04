@@ -61,4 +61,28 @@ public class RootController {
 
       return "error/access-denied";
     }
+
+    @GetMapping("/forgot-password")
+    public String password(){
+
+      return "forgot-password";
+    }
+
+    @GetMapping("/help")
+    public String helpSupport(){
+
+      return "help-support";
+    }
+
+    @GetMapping("/about")
+    public String aboutUs(){
+
+      return "aboutus";
+    }
+
+    @GetMapping("/user/profile")
+    public String profile(){
+
+      return "user/profile";
+    }
 }

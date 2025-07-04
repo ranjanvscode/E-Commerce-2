@@ -32,8 +32,10 @@ public class UserServiceImpl implements UserService {
         User userExist = userRepo.findByEmail(user.getEmail()).orElse(null);
 
         if(userExist==null){
+            
             user.setId(userId);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            
             if(user.getEmail().equals("ranjan@gmail.com")){
 
                 user.setRoleList(List.of(AppConstant.ROLE_USER,AppConstant.ROLE_ADMIN));
@@ -41,6 +43,7 @@ public class UserServiceImpl implements UserService {
                 
                 user.setRoleList(List.of(AppConstant.ROLE_USER));
             }
+            
             return userRepo.save(user);
         }else{
             return null;

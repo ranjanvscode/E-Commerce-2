@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - RMR's Homemade Delights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#f97316', // Orange
+                        secondary: '#ea580c', // Darker orange
+                        accent: '#fed7aa', // Light orange
+                        warm: '#fef3c7', // Warm yellow
+                        sage: '#84cc16' // Green for natural elements
+                    },
+                    fontFamily: {
+                        'display': ['Georgia', 'serif'],
+                        'body': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out; 
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .bounce-gentle {
+            animation: bounceGentle 2s infinite;
+        }
+        
+        @keyframes bounceGentle {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style> 
+</head>
+<body class="bg-gradient-to-br from-warm via-white to-accent min-h-screen font-body">
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="text-2xl">🧡</div>
+                    <h1 class="text-xl font-bold gradient-text">RMR's Homemade Delights</h1>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="/home" class="text-gray-700 hover:text-primary transition-colors">Home</a>
+                    <a href="/home" class="text-gray-700 hover:text-primary transition-colors">Products</a>
+                    <a href="#" class="text-primary font-semibold">About Us</a>
+                    <a href="/help" class="text-gray-700 hover:text-primary transition-colors">Contact</a>
+                </nav>
+                <button class="md:hidden text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative py-20 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="bounce-gentle inline-block text-6xl mb-6">🧡</div>
+            <h1 class="text-4xl md:text-6xl font-bold gradient-text mb-6 font-display">About Us</h1>
+            <div class="max-w-4xl mx-auto">
+                <p class="text-xl md:text-2xl text-gray-700 leading-relaxed mb-8 fade-in">
+                    Welcome to <span class="font-semibold text-primary">RMR's Homemade Delights</span> — your trusted destination for delicious, homemade Thekua and Salty.
+                </p>
+                <p class="text-lg text-gray-600 leading-relaxed fade-in">
+                    We're a small team (led by me, Ranjan) passionate about bringing the flavors of home to your doorstep. From crispy namkeen to delightful sewai, every product is crafted with care, quality ingredients, and traditional recipes — just like the way our mothers and grandmothers made them.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Floating Food Icons -->
+        <div class="absolute top-20 left-10 text-4xl opacity-20 animate-pulse">🥨</div>
+        <div class="absolute top-40 right-20 text-3xl opacity-20 animate-pulse" style="animation-delay: 1s;">🍪</div>
+        <div class="absolute bottom-20 left-20 text-3xl opacity-20 animate-pulse" style="animation-delay: 2s;">🥜</div>
+        <div class="absolute bottom-40 right-10 text-4xl opacity-20 animate-pulse" style="animation-delay: 0.5s;">🍯</div>
+    </section>
+
+    <!-- Why We Started Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="fade-in">
+                    <div class="flex items-center mb-6">
+                        <div class="text-4xl mr-4">👩‍🍳</div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 font-display">Why We Started</h2>
+                    </div>
+                    <div class="space-y-4 text-gray-700 leading-relaxed">
+                        <p class="text-lg">
+                            In a world full of packaged and artificial snacks, we wanted to offer something real <span class="font-semibold text-primary">Thekua and Snacks</span> made with love, purity, and honesty.
+                        </p>
+                        <p class="text-lg">
+                            What started as a home kitchen has now become a growing venture with loyal customers who trust us for taste and quality.
+                        </p>
+                    </div>
+                </div>
+                <div class="fade-in">
+                    <div class="relative">
+                        <div class="bg-gradient-to-br from-primary to-secondary rounded-2xl p-8 text-white transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                            <div class="text-center">
+                                <div class="text-6xl mb-4">🏠</div>
+                                <h3 class="text-2xl font-bold mb-2">From Home Kitchen</h3>
+                                <p class="text-lg opacity-90">to Your Doorstep</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Makes Us Special Section -->
+    <section class="py-16 bg-gradient-to-br from-accent/30 to-warm/30">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in">
+                <div class="flex items-center justify-center mb-6">
+                    <div class="text-4xl mr-4">🌿</div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 font-display">What Makes Us Special</h2>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 fade-in text-center group hover:scale-105 transform transition-transform">
+                    <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">✔️</div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">100% Homemade</h3>
+                    <p class="text-gray-600">No Preservatives</p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 fade-in text-center group hover:scale-105 transform transition-transform" style="animation-delay: 0.2s;">
+                    <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">🔥</div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Freshly Prepared</h3>
+                    <p class="text-gray-600">Small Batches</p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 fade-in text-center group hover:scale-105 transform transition-transform" style="animation-delay: 0.4s;">
+                    <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">🛡️</div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Hygienic & Safe</h3>
+                    <p class="text-gray-600">Packaging</p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 fade-in text-center group hover:scale-105 transform transition-transform" style="animation-delay: 0.6s;">
+                    <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">📜</div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Authentic Traditional</h3>
+                    <p class="text-gray-600">Recipes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Promise Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center fade-in">
+                <div class="flex items-center justify-center mb-6">
+                    <div class="text-4xl mr-4">🚚</div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 font-display">Our Promise</h2>
+                </div>
+                <div class="max-w-4xl mx-auto">
+                    <p class="text-xl text-gray-700 leading-relaxed mb-8">
+                        We aim to deliver not just Thekua, but the <span class="font-semibold text-primary">taste of home</span> and the <span class="font-semibold text-primary">joy of sharing</span>. Whether you're craving something salty, sweet, or crunchy — we've got something special for everyone.
+                    </p>
+                </div>
+                
+                <!-- Interactive Promise Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                    <div class="promise-card bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-300">
+                        <div class="text-3xl mb-3">🧂</div>
+                        <h3 class="font-semibold text-gray-900">Salty Cravings</h3>
+                        <p class="text-gray-600 mt-2">Crispy namkeen & savory treats</p>
+                    </div>
+                    
+                    <div class="promise-card bg-gradient-to-br from-sage/10 to-primary/10 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-300">
+                        <div class="text-3xl mb-3">🍯</div>
+                        <h3 class="font-semibold text-gray-900">Sweet Delights</h3>
+                        <p class="text-gray-600 mt-2">Traditional sweets & desserts</p>
+                    </div>
+                    
+                    <div class="promise-card bg-gradient-to-br from-warm/30 to-accent/30 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-300">
+                        <div class="text-3xl mb-3">🥨</div>
+                        <h3 class="font-semibold text-gray-900">Crunchy Snacks</h3>
+                        <p class="text-gray-600 mt-2">Perfect for any time munching</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Thank You Section -->
+    <section class="py-16 bg-gradient-to-r from-primary to-secondary text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in">
+            <div class="text-5xl mb-6">🙏</div>
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 font-display">Thank You!</h2>
+            <p class="text-xl leading-relaxed mb-4">
+                Thank you for supporting local food and small businesses like ours.
+            </p>
+            <p class="text-xl leading-relaxed font-semibold">
+                We're excited to be part of your snacking journey!
+            </p>
+            
+            <!-- Call to Action -->
+            <a href="/home" class="mt-8">
+                <button class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                    Explore Our Products
+                </button>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="text-2xl">🧡</div>
+                        <h3 class="text-xl font-bold">Ranjan's Homemade Delights</h3>
+                    </div>
+                    <p class="text-gray-400">Bringing the taste of home to your doorstep with love and tradition.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/home" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="/home" class="hover:text-white transition-colors">Products</a></li>
+                        <li><a href="/about" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="help" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-2xl hover:text-primary transition-colors">📧</a>
+                        <a href="#" class="text-2xl hover:text-primary transition-colors">📱</a>
+                        <a href="#" class="text-2xl hover:text-primary transition-colors">📍</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 RMR's Homemade Delights. Made with 🧡 for food lovers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Interactive promise cards
+        document.querySelectorAll('.promise-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05) rotate(2deg)';
+            }); 
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+            
+            card.addEventListener('click', function() {
+                // Add a little bounce effect
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                }, 100);
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some dynamic content loading
+        window.addEventListener('load', function() {
+            // Trigger initial animations
+            setTimeout(() => {
+                document.querySelectorAll('.fade-in').forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('visible');
+                    }, index * 100);
+                });
+            }, 300);
+        });
+
+        // Mobile menu toggle (basic implementation)
+        const mobileMenuButton = document.querySelector('button.md\\:hidden');
+        let mobileNav = null;
+
+        // Create mobile nav if not present
+        function getOrCreateMobileNav() {
+            if (!mobileNav) {
+            // Clone the desktop nav links
+            const desktopNav = document.querySelector('nav.md\\:flex');
+            if (desktopNav) {
+                mobileNav = desktopNav.cloneNode(true);
+                mobileNav.classList.remove('md:flex', 'hidden');
+                mobileNav.classList.add('flex', 'flex-col', 'space-y-4', 'bg-white', 'shadow-lg', 'absolute', 'top-16', 'right-4', 'left-4', 'rounded-xl', 'p-6', 'z-50');
+                mobileNav.style.display = 'none';
+                // Remove "About Us" highlight for mobile
+                mobileNav.querySelectorAll('a').forEach(a => a.classList.remove('text-primary', 'font-semibold'));
+                document.body.appendChild(mobileNav);
+            }
+            }
+            return mobileNav;
+        }
+
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', function() {
+            const nav = getOrCreateMobileNav();
+            if (nav) {
+                nav.style.display = nav.style.display === 'none' ? 'flex' : 'none';
+            }
+            });
+
+            // Hide mobile nav on resize to md and up
+            window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768 && mobileNav) {
+                mobileNav.style.display = 'none';
+            }
+            });
+        }
+    </script>
+</body>
+</html>

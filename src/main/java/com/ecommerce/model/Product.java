@@ -25,9 +25,9 @@ public class Product {
     @Column(nullable=false)
     private Float rating;
     private String imageId;
+    private String cloudinaryImagePublicId;
     private String description;
     private boolean inStock;
-    
     private BigDecimal price;
     private BigDecimal discount; // Optional product-specific discount
     private BigDecimal discountPrize; // Optional product-specific discount

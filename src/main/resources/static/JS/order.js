@@ -14,7 +14,7 @@
         const statusStyles = {
             delivered: 'bg-green-100 text-green-800',
             shipped: 'bg-blue-100 text-blue-800',
-            processing: 'bg-yellow-100 text-yellow-800',
+            processing: 'bg-yellow-100 text-yellow-800', 
             pending: 'bg-red-100 text-red-800',
             cancelled: 'bg-red-100 text-red-800'
         };
@@ -35,6 +35,10 @@
 
         // Render orders grid
         function renderOrders() {
+
+            // Sort orders by date descending (latest first)
+            filteredOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+
             ordersGrid.innerHTML = '';
             orderCount.textContent = filteredOrders.length;
 
@@ -128,8 +132,17 @@
             `;
 
             // Populate payment method
-            document.getElementById('paymentMethod').textContent = order.paymentMethod;
-
+            const paymentMethodElem = document.getElementById('paymentMethod');
+            if (order.paymentMethod.toLowerCase() === 'cod') {
+                paymentMethodElem.textContent = 'COD';
+                paymentMethodElem.className = 'inline-block px-3 py-1 rounded-full text-sm font-medium bg-orange-500 text-white w-auto';
+            } else if (order.paymentMethod.toLowerCase() === 'prepaid') {
+                paymentMethodElem.textContent = 'Prepaid';
+                paymentMethodElem.className = 'inline-block px-3 py-1 rounded-full text-sm font-medium bg-green-500 text-white w-auto';
+            } else {
+                paymentMethodElem.textContent = order.paymentMethod;
+                paymentMethodElem.className = 'inline-block px-3 py-1 rounded-full text-sm font-medium w-auto';
+            }        
             // Populate order summary
             document.getElementById('detailSubtotal').textContent = formatCurrency(order.subTotal);
             document.getElementById('detailShipping').textContent = formatCurrency(order.shipping.shippingCost);

@@ -1,6 +1,9 @@
 package com.ecommerce.Configration;
 
 
+import java.nio.charset.StandardCharsets;
+import java.net.URLEncoder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,29 +30,39 @@ public class SecurityConfigration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
+        String encodedError = URLEncoder.encode("You have been logged out.", StandardCharsets.UTF_8);
        
         httpSecurity.csrf(csrf -> csrf.disable())
-                    .authorizeHttpRequests(authorize->{ authorize
-                                                                .requestMatchers("/","/home").permitAll()
-                                                                .requestMatchers("/user/**","/cart/**").authenticated()
-                                                                .requestMatchers("/adminpannel/**").authenticated()
-                                                                 .requestMatchers("/adminpannel/**").hasRole("ADMIN")
-                                                                 .anyRequest().permitAll();});
+        .authorizeHttpRequests(authorize -> {
+            authorize
+                .requestMatchers("/", "/home", "/account/register").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/adminpannel/**", "/user/**", "/cart/**", "/account/**").authenticated()
+                .anyRequest().permitAll();
+        })
+        .formLogin(form -> form
+            .loginPage("/")
+            .loginProcessingUrl("/authenticate")
+            .defaultSuccessUrl("/", true)
+            .usernameParameter("email")
+            .passwordParameter("password")
+            .failureHandler(customAuthenticationFailureHandler())
+            .permitAll()
+        )
+        .rememberMe(rememberMe -> rememberMe
+            .key("09228c3ac25554f39d767fe325ce3") // Change this to a secure, unique key!
+            .rememberMeParameter("remember-me") // Name of checkbox in your login form
+            .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 days
+            .userDetailsService(customUserDetailService)
+        )
+        .logout(logout -> logout
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/home?logout=" + encodedError)
+        )
+        .exceptionHandling(exception -> exception.accessDeniedHandler(accessDeniedHandler()));
 
-        httpSecurity.formLogin(form->form.loginPage("/home")
-                                         .loginProcessingUrl("/authenticate")
-                                         .defaultSuccessUrl("/home", true)
-                                         .usernameParameter("email")
-                                         .passwordParameter("password")
-                                         .failureHandler(customAuthenticationFailureHandler())
-                                         .permitAll())
-
-                    .logout((logout) -> logout.logoutUrl("/logout")
-                                              .logoutSuccessUrl("/home?logout=true"));
-
-        httpSecurity.exceptionHandling(exception -> exception.accessDeniedHandler(accessDeniedHandler()));
-
-        return  httpSecurity.build();
+        return httpSecurity.build();
     }
 
     @Bean
@@ -80,7 +93,10 @@ public class SecurityConfigration {
             }else if (exception instanceof DisabledException) {
                 errorMessage = "Your account has been disabled.";
             } 
-            response.sendRedirect("/home?error=" + errorMessage);
+            
+            String encodedError = URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+            response.sendRedirect("/home?loginError=" + encodedError);
+
         };
     }
 

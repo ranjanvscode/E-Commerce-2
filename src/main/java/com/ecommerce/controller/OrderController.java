@@ -12,6 +12,7 @@ import com.ecommerce.model.OrderItem;
 import com.ecommerce.model.Product;
 import com.ecommerce.model.Shipping;
 import com.ecommerce.model.User;
+import com.ecommerce.service.EmailService;
 import com.ecommerce.service.OrderService;
 import com.ecommerce.service.PaymentService;
 import com.ecommerce.service.ProductService;
@@ -49,6 +50,9 @@ public class OrderController {
 
     @Autowired
     PaymentService paymentService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Value("${app.shipping-fee}")
     private int shippingFee;
@@ -125,6 +129,8 @@ public class OrderController {
 
         // Save orders (cascades to Address and OrderItems)
         orderService.saveOrder(orders);
+
+        emailService.sendOrderConfirmation(email, orders);
 
         return ResponseEntity.ok("Order placed successfully");
     }

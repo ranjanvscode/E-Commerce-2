@@ -18,6 +18,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,10 +33,11 @@ import lombok.ToString;
 @Builder
 @ToString
 @Entity
+@Table(name = "users")
 public class User implements UserDetails{
     
     @Id
-    private String id;
+    private String id; 
     @Column(nullable = false)
     private String name;
     @Column(unique = true, nullable = false)
@@ -44,6 +46,7 @@ public class User implements UserDetails{
     private String password;
     @Column(length = 1000)
     private String profilePic;
+    private String cloudinaryImageId;
     private String phoneNo;
 
     @Builder.Default

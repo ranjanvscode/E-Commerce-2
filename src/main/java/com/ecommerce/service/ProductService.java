@@ -36,10 +36,17 @@ public class ProductService {
     }
 
     //delete
-    public void deleteProduct(String id){
-
-        Product product = productRepo.findById(id).get();
-        productRepo.delete(product);
+    public boolean deleteProduct(String id) {
+        if (productRepo.existsById(id)) {
+            try {
+                productRepo.deleteById(id);
+                return !productRepo.existsById(id);
+                
+            } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                return false;
+            }
+        }
+        return false;
     }
  
     //Get

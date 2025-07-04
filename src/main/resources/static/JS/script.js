@@ -1,4 +1,3 @@
-
 // Global variables
 let cart = [];
 let filteredProducts = [];
@@ -28,10 +27,10 @@ function formatCurrency(amount) {
   }).format(amount);
 }
 
-// Render products
 function renderProducts(productsToRender = filteredProducts) {
-  if (productsToRender.length === 0) {
-    productGrid.classList.add("hidden");
+  // Handle empty state
+  if (!productsToRender.length) {
+    productGrid.classList.add("hidden");  
     noResults.classList.remove("hidden");
     return;
   }
@@ -39,95 +38,86 @@ function renderProducts(productsToRender = filteredProducts) {
   productGrid.classList.remove("hidden");
   noResults.classList.add("hidden");
 
+  // Helper: Render discount badge
+  const renderDiscountBadge = (discount) =>
+    discount > 0
+      ? `<div class="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-sm font-semibold">
+            ${discount}%
+        </div>`
+      : "";
+
+  // Helper: Render stock status
+  const renderStockStatus = (inStock) =>
+    !inStock
+      ? `<div class="absolute top-3 right-3 bg-gray-800 text-white px-2 py-1 rounded-md text-sm font-semibold">
+            Out of Stock
+        </div>`
+      : "";
+
+  // Helper: Render rating
+  const renderRating = (rating) =>
+    `<div class="absolute top-60 right-4">
+        <div class="bg-white dark:bg-gray-800 rounded-full px-2 py-1 text-sm font-semibold flex items-center">
+            <i class="fas fa-star text-yellow-400 mr-1"></i>
+            ${rating}
+        </div>
+    </div>`;
+
+  // Helper: Render pricing
+  const renderPricing = (product) => {
+    if (product.discount > 0) {
+      return `
+        <div class="flex items-center gap-2">
+          <span class="text-2xl font-bold text-green-600">${formatCurrency(product.discountPrice.toFixed(2))}</span>
+          <span class="text-lg text-gray-500 line-through">${formatCurrency(product.price.toFixed(2))}</span>
+          <span class="text-sm text-green-600 font-semibold">Save ${formatCurrency((product.price - product.discountPrice).toFixed(2))}</span>
+        </div>
+      `;
+    }
+    return `
+      <div class="flex items-center">
+        <span class="text-2xl font-bold text-gray-800 dark:text-gray-300">${formatCurrency(product.price.toFixed(2))}</span>
+      </div>
+    `;
+  };
+
+  // Helper: Render Add to Cart or Out of Stock button
+  const renderCartButton = (product) =>
+    product.inStock
+      ? `<div class="flex items-center gap-2">
+            <button onclick="addToCart('${product.id}')" 
+                class="flex-1 bg-primary2 text-white py-2 px-4 rounded-md hover:bg-secondary dark:bg-blue-600 transition-colors duration-200 flex items-center justify-center gap-2">
+                <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                Add to Cart
+            </button>
+        </div>`
+      : `<button disabled class="w-full bg-gray-300 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
+            Out of Stock
+        </button>`;
+
+  // Render all products
   productGrid.innerHTML = productsToRender
-    .map(
-      (product) => `
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                    <div class="relative">
-                        <img src="${product.image}" alt="${
-                          product.name
-                        }" class="w-full h-64 object-cover cursor-pointer" onclick="openProductModal('${
-                          product.id
-                        }')">
-                        
-                        <!-- Discount Badge -->
-                        ${product.discount>0 ? `
-                            <div class="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-sm font-semibold">
-                                ${product.discount}%
-                            </div>
-                        ` : ''}
-                          
-                        <!-- Stock Status -->
-                        ${!product.inStock ? `
-                            <div class="absolute top-3 right-3 bg-gray-800 text-white px-2 py-1 rounded-md text-sm font-semibold">
-                                Out of Stock
-                            </div>
-                        ` : ''}
-
-                        <div class="absolute top-60 right-4">
-                            <div class="bg-white dark:bg-gray-800 rounded-full px-2 py-1 text-sm font-semibold flex items-center">
-                                <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                ${product.rating}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold mb-2 cursor-pointer hover:text-primary-600 transition-colors" onclick="openProductModal('${
-                          product.id
-                        }')">${product.name}</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">${product.description.substring(
-                          0,
-                          80
-                        )}...</p>
-
-                        <!-- Pricing -->
-                        <div class="mb-4">
-                            ${product.discount>0 ? `
-                                <div class="flex items-center gap-2">
-                                    <span class="text-2xl font-bold text-green-600">${formatCurrency(product.discountPrice.toFixed(2))}</span>
-                                    <span class="text-lg text-gray-500 line-through">${formatCurrency(product.price.toFixed(2))}</span>
-                                    <span class="text-sm text-green-600 font-semibold">Save ${formatCurrency((product.price-product.discountPrice).toFixed(2))}</span>
-                                </div>
-                            ` : `
-                                <div class="flex items-center">
-                                    <span class="text-2xl font-bold text-gray-800 dark:text-gray-300">${formatCurrency(product.price.toFixed(2))}</span>
-                                </div>
-                            `}
-                        </div>
-
-
-                       <!-- <div class="flex items-center justify-between">
-                            <span class="text-2xl font-bold text-primary-600">${formatCurrency(
-                              product.price
-                            )}</span>
-                            <button onclick="addToCart('${
-                              product.id
-                            }')" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center space-x-2">
-                                <i class="fas fa-cart-plus"></i>
-                                <span>Add to Cart</span>
-                            </button>
-                        </div> -->
-
-                        <div>
-                            ${product.inStock ? `
-                            <div class="flex items-center gap-2">
-                            
-                                <button onclick="addToCart('${product.id}')" 
-                                        class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center gap-2">
-                                    <i data-lucide="shopping-cart" class="w-4 h-4"></i>
-                                    Add to Cart
-                                </button>
-                            </div>
-                        ` : `
-                            <button disabled class="w-full bg-gray-300 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
-                                Out of Stock
-                            </button>
-                        `}
-                        </div>
-
-                    </div>
-                </div>`
-              ).join("");
+    .map((product) => {
+      return `
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          <div class="relative">
+            <img src="${product.image}" alt="${product.name}" class="w-full h-64 object-cover cursor-pointer" onclick="openProductModal('${product.id}')">
+            ${renderDiscountBadge(product.discount)}
+            ${renderStockStatus(product.inStock)}
+            ${renderRating(product.rating)}
+          </div>
+          <div class="p-6">
+            <h3 class="text-lg font-semibold mb-2 cursor-pointer hover:text-primary-600 transition-colors" onclick="openProductModal('${product.id}')">${product.name}</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">${product.description.substring(0, 80)}...</p>
+            <div class="mb-4">
+              ${renderPricing(product)}
+            </div>
+            ${renderCartButton(product)}
+          </div>
+        </div>
+      `;
+    })
+    .join("");
 }
 
 // Search functionality
@@ -237,14 +227,12 @@ function addToCart(productId, quantity = 1) {
       },
       body: JSON.stringify(cartData),
     })
-      .then((response) => {
+      .then((response) => { 
         if (response.ok) {
+          showNotification(`${product.name} added to cart!`);
           return;
         }
         throw new Error("Failed to save cart");
-      })
-      .then((data) => {
-        showNotification(`${product.name} added to cart!`);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -312,68 +300,65 @@ function updateCartQuantity(productId, quantity) {
   }
 }
 
-function updateCartUI() {
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  // const totalPrice = cart.reduce((sum, item) => sum + (item.product?.price || 0) * item.quantity,0);
-  // const totalPrice = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
+function updateCartUI() {
+  // Calculate total items and price
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cart.reduce((sum, item) => {
-  const price = item.product?.discountPrice > 0 ? item.product.discountPrice : item.product?.price || 0;
-  return sum + price * item.quantity; 
+    const price =
+      item.product?.discountPrice > 0
+        ? item.product.discountPrice
+        : item.product?.price || 0;
+    return sum + price * item.quantity;
   }, 0);
 
-
+  // Update cart summary UI
   cartCount.textContent = totalItems;
-  cartTotal.textContent = `${formatCurrency(totalPrice.toFixed(2))}`;
-  document.getElementById("subtotalAmount").textContent = `${formatCurrency(totalPrice.toFixed(2))}`;
+  cartTotal.textContent = formatCurrency(totalPrice.toFixed(2));
+  document.getElementById("subtotalAmount").textContent = formatCurrency(totalPrice.toFixed(2));
   document.getElementById("shippingAmount").textContent = shippingFee;
-  document.getElementById("checkoutTotal").textContent = `${formatCurrency((totalPrice + shippingFee).toFixed(2))}`
+  document.getElementById("checkoutTotal").textContent = formatCurrency((totalPrice + shippingFee).toFixed(2));
 
+  // Handle empty cart UI
   if (cart.length === 0) {
     emptyCart.classList.remove("hidden");
     cartFooter.classList.add("hidden");
     cartItems.innerHTML =
-      '<div id="emptyCart" class="text-center py-12"><i class="fas fa-shopping-cart text-6xl text-gray-400 mb-4"></i><p class="text-gray-500 dark:text-gray-400">Your cart is empty</p></div>';
-  } else {
-    emptyCart.classList.add("hidden");
-    cartFooter.classList.remove("hidden");
-
-    cartItems.innerHTML = cart.map((item) => `
-                    <div class="flex items-center space-x-4 py-4 border-b border-gray-200 dark:border-gray-700">
-                            <img src="${item.product.imageId || item.product.image}" alt="${item.product.name}" class="w-16 h-16 object-cover rounded">
-                           
-                            <div class="flex-1">
-                                <h4 class="font-semibold">${item.product.name}</h4>
-
-                              ${item.product.discountPrice>0
-                                ?`<p class="text-primary-600 font-bold">${formatCurrency(item.product.discountPrice)}</p>`
-                                :`<p class="text-primary-600 font-bold">${formatCurrency(item.product.price)}</p>`
-                              } 
-                            </div>
-
-                            <div class="flex items-center space-x-2">
-                                <button onclick="updateCartQuantity('${
-                                  item.product.id
-                                }', ${
-                             item.quantity - 1
-                            })" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">-</button>
-                                    <span class="w-8 text-center">${
-                                      item.quantity
-                                    }</span>
-                                <button onclick="updateCartQuantity('${
-                                  item.product.id
-                                }', ${
-                              item.quantity + 1
-                            })" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">+</button>
-                            </div>
-                            <button onclick="removeFromCart('${
-                              item.product.id
-                            }')" class="text-red-500 hover:text-red-700 transition-colors">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                    </div>`
-      ).join("");
+      `<div id="emptyCart" class="text-center py-12">
+        <i class="fas fa-shopping-cart text-6xl text-gray-400 mb-4"></i>
+        <p class="text-gray-500 dark:text-gray-400">Your cart is empty</p>
+      </div>`;
+    return;
   }
+
+  // Show cart items and footer
+  emptyCart.classList.add("hidden");
+  cartFooter.classList.remove("hidden");
+
+  // Render each cart item
+  cartItems.innerHTML = cart.map(item => {
+    const { id, name, imageId, image, discountPrice, price } = item.product;
+    const displayPrice = discountPrice > 0 ? discountPrice : price;
+    return `
+      <div class="flex items-center space-x-4 py-4 border-b border-gray-200 dark:border-gray-700">
+        <img src="${imageId || image}" alt="${name}" class="w-16 h-16 object-cover rounded">
+        <div class="flex-1">
+          <h4 class="font-semibold">${name}</h4>
+          <p class="text-primary-600 font-bold">${formatCurrency(displayPrice)}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="updateCartQuantity('${id}', ${item.quantity - 1})"
+            class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">-</button>
+          <span class="w-8 text-center">${item.quantity}</span>
+          <button onclick="updateCartQuantity('${id}', ${item.quantity + 1})"
+            class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">+</button>
+        </div>
+        <button onclick="removeFromCart('${id}')" class="text-red-500 hover:text-red-700 transition-colors">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    `;
+  }).join("");
 }
 
 // Cart sidebar toggle
@@ -505,55 +490,132 @@ function setupAuthModals() {
   });
 }
 
-//Setup Checkout model
+
+//Sign Up Function
+document.getElementById('signupForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Collect form data
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    // Prepare payload
+    const payload = { name, email, password };
+
+    try {
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === 'success') {
+            showNotification(data.message);
+        } else {
+          showNotification(data.message,'error');
+        }
+    } catch (err) {
+      showNotification('An error occurred. Please try again.','error');
+    }
+});
+
+//Checkout modal setup
 function setupCheckoutModal() {
   const checkoutBtn = document.getElementById("checkoutBtn");
   const checkoutModal = document.getElementById("checkoutModal");
   const closeCheckoutModal = document.getElementById("closeCheckoutModal");
   const checkoutForm = document.getElementById("checkoutForm");
+  const placeOrderBtn = document.getElementById("placeOrderBtn");
 
+  function showCheckoutSpinner() {
+    document.getElementById('checkoutSpinnerOverlay').classList.remove('hidden');
+  }
+  function hideCheckoutSpinner() {
+    document.getElementById('checkoutSpinnerOverlay').classList.add('hidden');
+  }
+
+  // Open checkout modal
   checkoutBtn.addEventListener("click", () => {
     checkoutModal.classList.remove("hidden");
     closeCartSidebar();
     document.body.style.overflow = "hidden";
   });
 
+  // Close checkout modal
   closeCheckoutModal.addEventListener("click", () => {
     checkoutModal.classList.add("hidden");
     document.body.style.overflow = "auto";
   });
 
+  // Handle checkout form submission
   checkoutForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-      totalAmount = cart.reduce((sum, item) => {
-          const price = item.product?.discountPrice > 0 ? item.product.discountPrice : item.product?.price || 0;
-          return sum + price * item.quantity;
-          }, 0);
+    // Validate city is filled (auto-filled by pin code)
+    const city = document.getElementById("addCity").value.trim();
+    if (!city) {
+      showNotification("Please wait for city to be filled before checkout.", "error");
+      return;
+    }
 
-    await fetchReceiptId(); // Generate Receipt ID
+    placeOrderBtn.innerText = "Processing...";
+    showCheckoutSpinner();
+
+    // Calculate total amount
+    totalAmount = cart.reduce((sum, item) => {
+      const price = item.product?.discountPrice > 0 ? item.product.discountPrice : item.product?.price || 0;
+      return sum + price * item.quantity;
+    }, 0);
+
+    // Generate receipt ID
+    await fetchReceiptId();
 
     paymentMethod = document.getElementById("paymentMethod").value;
 
+    // Payment flow
     if (paymentMethod === "prepaid") {
-      rzpCheckout(); // payment gatway
+      loadRazorpayScript(() => {
+        rzpCheckout();
+        hideCheckoutSpinner();
+        placeOrderBtn.innerText = "Place Order";
+      });
     } else {
-      SaveOrderData();
+      await SaveOrderData();
+      hideCheckoutSpinner();
+      placeOrderBtn.innerText = "Place Order";
     }
   });
 }
 
 
-
 //Payment System
-//1. Create order
+// Load Razorpay script dynamically
+function loadRazorpayScript(callback) {
+    const existingScript = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+    if (!existingScript) {
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.onload = () => {
+            console.log("Razorpay script loaded.");
+            callback(); // call your payment logic after loading
+        };
+        script.onerror = () => {
+            alert("Failed to load Razorpay script. Please try again.");
+        };
+        document.body.appendChild(script);
+    } else {
+        callback(); // If already loaded
+    }
+}
+
+// Razorpay Checkout Handler
 function rzpCheckout() {
+  const amount = parseFloat(totalAmount + shippingFee).toFixed(2);
 
-  // const amount = cart.reduce((sum, item) => sum + (item.product?.price || 0) * item.quantity,0);
-  const amount = parseFloat(totalAmount+shippingFee).toFixed(2);
-  console.log("PAisaCheking:",totalAmount,":Amount",amount);
-
-  if (isNaN(amount) && amount <= 0 && !amount) {
+  if (isNaN(amount) || amount <= 0) {
     alert("Please enter a valid amount greater than 0");
     return;
   }
@@ -569,64 +631,73 @@ function rzpCheckout() {
         return;
       }
 
-      let name = document.getElementById("addName").value;
-      let phoneNo = document.getElementById("addPhoneNo").value;
-
-      const options = {
-        // key: "rzp_test_kM7HJJbp7bkdwA",
-        key: RAZORPAY_KEY_ID,
-        amount: order.amount,
-        currency: order.currency,
-        name: "RMR",
-        description: "Payment for your order",
-        image: "",
-        order_id: order.id,
-        handler: function (response) {
-          verifySignature(response);
-        },
-        prefill: {
-          name: name,
-          email: "",
-          contact: phoneNo,
-        },
-        notes: {
-          receipt_id: "Receipt id in note",
-        },
-        theme: {
-          color: "#3399cc",
-        },
-      };
-
-      const rzp1 = new Razorpay(options);
-      rzp1.on("payment.failed", function (response) {
-
-        alert("FAILED: " + response.error.description);
-
-        fetch("/payment/failure", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                razorpay_order_id: response.error.metadata.order_id,
-                razorpay_payment_id: response.error.metadata.payment_id,
-                reason: response.error.reason,
-                code: response.error.code,
-                description: response.error.description,
-                source: response.error.source,
-                step: response.error.step
-            })
-        })
-        .then(res => res.text())
-        .then(data => console.log("Failure saved:", data))
-        .catch(err => console.error("Failure save error:", err));
-      });
-
-      rzp1.open();
+      openRazorpay(order);
+    })
+    .catch((err) => {
+      alert("Failed to initiate payment. Please try again.");
+      console.error("Order creation error:", err);
     });
 }
 
-//Verify Payment Signature
+// Open Razorpay Payment Modal
+function openRazorpay(order) {
+  const name = document.getElementById("addName").value;
+  const phoneNo = document.getElementById("addPhoneNo").value;
+
+  const options = {
+    key: RAZORPAY_KEY_ID,
+    amount: order.amount,
+    currency: order.currency,
+    name: "RMR",
+    description: "Payment for your order",
+    image: "",
+    order_id: order.id,
+    handler: verifySignature,
+    prefill: {
+      name: name,
+      email: "",
+      contact: phoneNo,
+    },
+    notes: {
+      receipt_id: "Receipt id in note",
+    },
+    theme: {
+      color: "#3399cc",
+    },
+  };
+
+  const rzp1 = new Razorpay(options);
+
+  rzp1.on("payment.failed", handlePaymentFailure);
+
+  rzp1.open();
+}
+
+// Handle Payment Failure
+function handlePaymentFailure(response) {
+  alert("FAILED: " + response.error.description);
+
+  fetch("/payment/failure", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      razorpay_order_id: response.error.metadata.order_id,
+      razorpay_payment_id: response.error.metadata.payment_id,
+      reason: response.error.reason,
+      code: response.error.code,
+      description: response.error.description,
+      source: response.error.source,
+      step: response.error.step,
+    }),
+  })
+    .then((res) => res.text())
+    .then((data) => console.log("Failure saved:", data))
+    .catch((err) => console.error("Failure save error:", err));
+}
+
+// Verify Payment Signature
 function verifySignature(response) {
   fetch("/payment/verifySignature", {
     method: "POST",
@@ -641,13 +712,11 @@ function verifySignature(response) {
   })
     .then((res) => res.text())
     .then((data) => {
-      console.log("Signature Verification Response:", data);
 
       if (data === "Payment Verified") {
         SaveOrderData();
       } else {
-        // alert("Signature mismatch. Possible fraud.");
-        showNotification("Signature mismatch. Possible fraud.");
+        showNotification("Signature mismatch. Possible fraud.","error");
       }
     })
     .catch((err) => {
@@ -656,11 +725,9 @@ function verifySignature(response) {
     });
 }
 
-
-
 //Save order data in DB
 async function SaveOrderData() {
-  // 1. Get address details from the form 
+  // 1. Get address details from the form
   const shipping = {
     name: document.getElementById("addName").value,
     phoneNo: document.getElementById("addPhoneNo").value,
@@ -674,18 +741,19 @@ async function SaveOrderData() {
   const items = cart.map((item) => ({
     productId: item.product.id,
     quantity: item.quantity,
-    price: item.product?.discountPrice > 0 ? item.product.discountPrice : item.product?.price || 0
+    price:
+      item.product?.discountPrice > 0
+        ? item.product.discountPrice
+        : item.product?.price || 0,
   }));
 
   // 3. Prepare full order payload
   const orderData = {
-    receiptId:receiptId,
+    receiptId: receiptId,
     paymentMethod: paymentMethod,
     shipping: shipping,
     items: items,
   };
-
-  // console.log(orderData);
 
   try {
     const response = await fetch("/user/placeOrder", {
@@ -702,14 +770,14 @@ async function SaveOrderData() {
 
       // Show ThankU Message
       setTimeout(() => {
-        showModal();
+        showModal();//Thanku message modal
+        document.getElementById("placeOrderBtn").innerText = "Place Order";
       }, 200);
 
       checkoutModal.classList.add("hidden");
       document.body.style.overflow = "auto";
       cart = [];
       updateCartUI();
-
     } else {
       const err = await response.text();
       alert("Order failed: " + err);
@@ -763,14 +831,14 @@ async function fetchReceiptId() {
   try {
     const response = await fetch("/payment/generateReceipt");
     const data = await response.json();
-    receiptId = data.receiptId; 
+    receiptId = data.receiptId;
   } catch (error) {
     console.error("Error fetching receipt ID:", error);
     receiptId = null;
   }
 }
 
-// Order place thank you message 
+// Order place thank you message
 //
 const modalOverlay = document.getElementById("modalOverlay");
 const modalContent = document.getElementById("modalContent");
@@ -783,7 +851,7 @@ const thanksTotal = document.getElementById("thanksTotal");
 function showModal() {
   // Generate new order number
   orderNumber.textContent = receiptId;
-  thanksTotal.textContent = formatCurrency(totalAmount+shippingFee);
+  thanksTotal.textContent = formatCurrency(totalAmount + shippingFee);
 
   // Show overlay
   modalOverlay.classList.remove("hidden");
@@ -834,25 +902,34 @@ document.addEventListener("keydown", (e) => {
 });
 // close thanku message
 
-//Notification function
-function showNotification(message) {
+function showNotification(message, type = "success") {
   const notification = document.createElement("div");
+
+  // Common styles
   notification.className =
-    "fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300";
+    "fixed left-1/2 top-2 transform -translate-x-1/2 translate-y-[-100%] transition-transform duration-300 px-6 py-3 rounded-lg shadow-lg z-50 text-white text-center w-full max-w-md";
+
+  // Dynamic background based on type
+  notification.classList.add(type === "error" ? "bg-red-500" : "bg-green-500");
   notification.textContent = message;
+
+  // Add to body
   document.body.appendChild(notification);
 
+  // Slide in after slight delay
   setTimeout(() => {
-    notification.classList.remove("translate-x-full");
-  }, 100);
+    notification.style.transform = "translate(-50%, 0)";
+  }, 200);
 
+  // Slide out and remove after 2.5 seconds
   setTimeout(() => {
-    notification.classList.add("translate-x-full");
+    notification.style.transform = "translate(-50%, -100%)";
     setTimeout(() => {
       document.body.removeChild(notification);
     }, 300);
-  }, 2000);
+  }, 2500);
 }
+
 
 //Fetch State and district name by pin code
 document.getElementById("addPostalCode").addEventListener("blur", function () {
@@ -881,7 +958,25 @@ document.getElementById("addPostalCode").addEventListener("blur", function () {
       console.error("Error fetching location:", error);
       alert("Something went wrong while fetching location.");
     });
-});//close
+}); //close
+
+ window.addEventListener('DOMContentLoaded', () => {
+
+     const urlParams = new URLSearchParams(window.location.search);
+
+      // LOGIN MODAL HANDLING
+      if (urlParams.has('loginError')) {
+          let errorMsg = decodeURIComponent(urlParams.get("loginError"));
+          showNotification(errorMsg,"error");
+      }
+
+      if(urlParams.has('logout')){
+        let message = decodeURIComponent(urlParams.get("logout"));
+        showNotification(message,"success");
+      }
+      // Clean the URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+});
 
 
 // Initialize the application
@@ -898,52 +993,7 @@ function runAfterLogin() {
   updateCartUI();
 }
 
-//Fetch all product and Start application
-// document.addEventListener("DOMContentLoaded", () => {
-//   fetch("/products/getAllProduct")
-//     .then((response) => response.json())
-//     .then((products) => {
-//       allProducts = [...products];
-//       filteredProducts = [...products];
-//       console.log(allProducts);
-//       renderProducts();
-//       init();
-//     })
-//     .catch((error) => console.error("Error fetching product:", error));
-// });
 
-// //If user is logged in then fetch all user cart item
-// document.addEventListener("DOMContentLoaded", () => {
-//   if (typeof isAuthenticated !== "undefined" && isAuthenticated) {
-//     fetch("/cart/getAllCartItems")
-//       .then((response) => response.json())
-//       .then((cartItems) => {
-//         cart = [...cartItems];
-//         runAfterLogin();
-//       })
-//       .catch((error) => console.error("User is not authenticated", error));
-//   }
-// });
-
-   window.addEventListener('DOMContentLoaded', () => {
-        const message = document.getElementById('serverMessage');
-        if (message) {
-            // Trigger fade-in
-            setTimeout(() => {
-                message.style.opacity = '1';
-            }, 100); // slight delay ensures transition triggers
-
-            // Auto hide with fade-out
-            setTimeout(() => {
-                message.style.opacity = '0';
-                // Optional: remove from DOM after fade-out
-                setTimeout(() => {
-                    message.remove();
-                }, 500); // match with transition duration
-            }, 4000); // show for 4 seconds
-        }
-    });
-    
 document.addEventListener("DOMContentLoaded", () => {
   fetch("/products/getAllProduct")
     .then((response) => response.json())
@@ -954,31 +1004,27 @@ document.addEventListener("DOMContentLoaded", () => {
       renderProducts();
       init();
 
-      // Load cart item if user is logged In and after product is loaded
-      if (typeof isAuthenticated !== "undefined" && isAuthenticated) {
-        return fetch("/cart/getAllCartItems");
-      }
-    })
-    .then((response) => response?.json())
-    .then((cartItems) => {
-      if (cartItems) {
-        cart = [...cartItems];
+        // Load cart item if user is logged In and after product is loaded
+        if (typeof isAuthenticated !== "undefined" && isAuthenticated) {
+          return fetch("/cart/getAllCartItems");
+        }
+    }).then((response) => response?.json())
+      .then((cartItems) => {
+       if (cartItems) {
+          cart = [...cartItems];
 
-        cart = cartItems.map(item => {
-            const fullProduct = allProducts.find(p => p.id === item.product.id);
-            if (fullProduct) {
-              item.product.discountPrice = fullProduct.discountPrice;
-              item.product.price = fullProduct.price; // optional
-            }
-            return item;
-          });
-
+          cart = cartItems.map((item) => {
+          const fullProduct = allProducts.find((p) => p.id === item.product.id);
+          if (fullProduct) {
+            item.product.discountPrice = fullProduct.discountPrice;
+            item.product.price = fullProduct.price; // optional
+          }
+          return item;
+        });
         runAfterLogin();
-        console.log("Cart items loaded:", cart);
       }
     })
     .catch((error) => {
       console.error("Error loading products or cart:", error);
     });
-});
-
+}); 

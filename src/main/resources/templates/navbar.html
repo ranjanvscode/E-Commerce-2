@@ -1,6 +1,6 @@
 
 <header th:fragment="userNavbar" class="bg-gray-100 dark:bg-gray-800 shadow-lg sticky top-0 z-50 transition-colors duration-300">
-        <div class="w-full bg-gray-100 dark:bg-gray-800 z-50 container mx-auto px-4 py-3">
+        <div class="bg-white/90 backdrop-blur-sm w-full bg-gray-100 dark:bg-gray-800 z-50 container mx-auto py-3 px-4 fixed top-0 left-0 right-0 z-50">   
             <div class="flex items-center justify-between">
                 
                 <div class="flex">
@@ -15,43 +15,28 @@
                     </button>
                     
                     <!-- Logo -->
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center space-x-2 hidden">
                         <!-- <i class="fas fa-shopping-bag text-2xl text-primary-600"></i> -->
-                        <img th:src="@{/images/rmr.png}" alt="" class="img-fluid" style="width: 50px;" >
-                        <!-- <h1 class="text-2xl font-bold text-primary-600">RMR</h1> -->
+                        <!-- <img th:src="@{/images/rmr.png}" alt="" class="img-fluid" style="width: 50px;" > -->
+                        <h1 class="text-2xl font-bold text-secondary dark:text-primary-600">RMR</h1>
                     </div>
                 </div>
 
-                <div th:replace="~{message :: messageBox}" >
-                </div>
+                <!-- Desktop Navigation (visible on md and up) -->
+                <nav class="hidden md:flex space-x-8 ml-20">
+                    <a href="/home" class="text-gray-700 dark:text-white hover:text-primary">Home</a>
+                    <a href="/home" class="text-gray-700 dark:text-white hover:text-primary">Product</a>
+                    <a href="/about" class="text-gray-700 dark:text-white hover:text-primary">About Us</a>
+                    <a href="/help" class="text-gray-700 dark:text-white hover:text-primary">Contact</a>
+                </nav>
 
-                <!-- Invalid Message -->
-                <div 
-                    th:if="${param.error}"
-                    class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert"
-                >
-                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                    </svg>
-                    <span class="sr-only">Info</span>
-                    <div>
-                        <span class="font-medium" th:text="${param.error}"></span>
-                    </div> 
-                </div>
-
-                <!-- Logout Message -->
-                <div
-                    th:if="${param.logout}"
-                    class="flex items-center p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert"
-                >
-                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                    </svg>
-                        <span class="sr-only">Info</span>
-                    <div>
-                        <span class="font-medium"></span> You have been logged out.
-                    </div>
-                </div>
+                <!-- Mobile Navigation (visible below md) -->
+                <!-- <nav class="flex space-x-4 ml-4 md:hidden">
+                    <a href="/home" class="text-gray-700 dark:text-white hover:text-primary">Home</a>
+                    <a href="/home" class="text-gray-700 dark:text-white hover:text-primary">Product</a>
+                    <a href="/about" class="text-gray-700 dark:text-white hover:text-primary">About</a>
+                    <a href="/help" class="text-gray-700 dark:text-white hover:text-primary">Contact</a>
+                </nav> -->
 
                 <!-- Header Actions -->
                 <div class="flex items-center space-x-4">
@@ -62,22 +47,16 @@
                     </button>
 
                     <!-- User Account -->
-                    <button th:if="${#authorization.expression('isAuthenticated()')}" class="hidden md:flex items-center space-x-2 px-4 py-2 text-primary-600 hover:text-primary-700 transition-colors">
-                        <i class="fas fa-user"></i>
-                        <span th:text="${user.name}" >Login</span>
-                    </button>
+                    <a th:if="${#authorization.expression('isAuthenticated()')}" href="/user/profile" class="hidden md:flex items-center space-x-2 px-4 py-2 text-primary-600 hover:text-primary-700 transition-colors">
+                        <i class="fas fa-user text-secondary dark:text-primary-600"></i>
+                        <span th:text="${user.name}" class="text-secondary dark:text-primary-600"></span>
+                    </a>
 
                     <button id="loginBtn" 
                             th:style="${#authorization.expression('isAuthenticated()')} ? 'display:none' : ''"
-                            class="
-                                md:inline-flex
-                                items-center
-                                space-x-2
-                                px-4 py-2
-                                text-primary-600 hover:text-primary-700 transition-colors">
-
-                            <i class="fas fa-user"></i>
-                        <span>Login</span>
+                            class="md:inline-flex items-center space-x-2 px-4 py-2 text-primary-600 hover:text-primary-700 transition-colors">
+                            <i class="fas fa-user text-secondary dark:text-primary-600"></i>
+                        <span class="text-secondary dark:text-primary-600">Login</span>
                     </button>
 
                     <!-- Cart -->
@@ -87,39 +66,39 @@
                         <i class="fas fa-shopping-cart"></i>
                         <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
                     </button>
-
-                     <!-- Shopping Cart Sidebar -->
-                        <div id="cartSidebar" class="fixed inset-y-0 right-0 w-96 bg-gray-100 dark:bg-gray-800 shadow-xl transform translate-x-full transition-transform duration-300 z-50">
-                            <div class="flex flex-col h-full">
-                                <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-                                    <h3 class="text-lg font-semibold">Shopping Cart</h3>
-                                    <button id="closeCart" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                                
-                                <div id="cartItems" class="flex-1 overflow-y-auto p-6">
-                                    <div id="emptyCart" class="text-center py-12">
-                                        <i class="fas fa-shopping-cart text-6xl text-gray-400 mb-4"></i>
-                                        <p class="text-gray-500 dark:text-gray-400">Your cart is empty</p>
-                                    </div>
-                                </div>
-                                
-                                <div id="cartFooter" class="hidden border-t border-gray-200 dark:border-gray-700 p-6">
-                                    <div class="flex justify-between items-center mb-4">
-                                        <span class="text-lg font-semibold">Total:</span>
-                                        <span id="cartTotal" class="text-xl font-bold text-primary-600">$0.00</span>
-                                    </div>
-                                    <button id="checkoutBtn" class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors">
-                                        Proceed to Checkout
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Cart Overlay -->
-                        <div id="cartOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
                 </div>
             </div>
         </div>
+
+        <!-- Shopping Cart Sidebar -->
+        <div id="cartSidebar" class="fixed inset-y-0 right-0 w-96 bg-gray-100 dark:bg-gray-800 shadow-xl transform translate-x-full transition-transform duration-300 z-50">
+            <div class="flex flex-col h-full">
+                <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold">Shopping Cart</h3>
+                    <button id="closeCart" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div id="cartItems" class="flex-1 overflow-y-auto p-6">
+                    <div id="emptyCart" class="text-center py-12">
+                        <i class="fas fa-shopping-cart text-6xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-500 dark:text-gray-400">Your cart is empty</p>
+                    </div>
+                </div>
+                
+                <div id="cartFooter" class="hidden border-t border-gray-200 dark:border-gray-700 p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-lg font-semibold">Total:</span>
+                        <span id="cartTotal" class="text-xl font-bold text-primary-600">$0.00</span>
+                    </div>
+                    <button id="checkoutBtn" class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors">
+                        Proceed to Checkout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Overlay -->
+        <div id="cartOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
     </header>
