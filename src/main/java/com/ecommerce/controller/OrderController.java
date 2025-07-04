@@ -52,10 +52,10 @@ public class OrderController {
     PaymentService paymentService;
 
     @Autowired
-    private EmailService emailService;
+    EmailService emailService;
 
     @Value("${app.shipping-fee}")
-    private int shippingFee;
+    int shippingFee;
 
     @PostMapping("/placeOrder")
     public ResponseEntity<String> placeOrder(@Valid @RequestBody OrderRequest request, Authentication authentication, BindingResult result) {

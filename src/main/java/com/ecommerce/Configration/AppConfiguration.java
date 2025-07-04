@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
-import jakarta.annotation.PostConstruct;
-
 @Configuration
 public class AppConfiguration {
 
@@ -31,10 +29,5 @@ public class AppConfiguration {
                 "api_secret",apiSecret
             )
         );
-    }
-
-    @PostConstruct
-    public void printCloudinaryConfig() {
-        System.out.println("Cloudinary config: " + cloudName + ", " + apiKey + ", " + apiSecret);
     }
 }
